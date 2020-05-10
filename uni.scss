@@ -1,0 +1,173 @@
+/* 页面左右间距 */
+$page-row-spacing: 30upx;
+$page-color-base: #f8f8f8;
+$page-color-light: #f8f6fc;
+$base-color: #fa436a;
+
+/* 文字尺寸 */
+$font-sm: 24upx;
+$font-base: 28upx;
+$font-lg: 32upx;
+/*文字颜色*/
+$font-color-dark: #303133;
+$font-color-base: #606266;
+$font-color-light: #909399;
+$font-color-disabled: #c0c4cc;
+$font-color-spec: #4399fc;
+/* 边框颜色 */
+$border-color-dark: #dcdfe6;
+$border-color-base: #e4e7ed;
+$border-color-light: #ebeef5;
+/* 图片加载中颜色 */
+$image-bg-color: #eee;
+/* 行为相关颜色 */
+$uni-color-primary: #007aff;
+$uni-color-success: #4cd964;
+$uni-color-warning: #f0ad4e;
+$uni-color-error: #dd524d;
+$main-color: #a98b59;
+$font-color-gray: #999999;
+$font-color-skin: #efc471;
+$uni-font-tips-color: #b5b5b5;
+$uni-gray-btn-color: #606266;
+
+/**
+ * 公共樣式
+ */
+
+/* 单条商品 */
+.goods-box-single {
+	display: flex;
+	padding: 20upx 0;
+	.goods-img {
+		display: block;
+		width: 120upx;
+		height: 120upx;
+	}
+	.right {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		padding: 0 30upx 0 24upx;
+		overflow: hidden;
+		.title {
+			font-size: $font-base + 2upx;
+			color: $font-color-dark;
+			line-height: 1;
+		}
+		.attr-box {
+			font-size: $font-sm + 2upx;
+			color: $font-color-light;
+			padding: 10upx 12upx;
+		}
+		.price {
+			font-size: $font-base + 2upx;
+			color: $font-color-dark;
+			&:before {
+				content: '￥';
+				font-size: $font-sm;
+				margin: 0 2upx 0 8upx;
+			}
+		}
+	}
+}
+/* 圓角按鈕 */
+.action-box {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	height: 100upx;
+	position: relative;
+	padding-right: 30upx;
+	background: #fff;
+}
+.action-btn {
+	width: 160upx;
+	height: 60upx;
+	margin: 0;
+	margin-left: 24upx;
+	padding: 0;
+	text-align: center;
+	line-height: 60upx;
+	font-size: $font-sm + 2upx;
+	color: $font-color-dark;
+	background: #fff;
+	border-radius: 100px;
+	&:after {
+		border-radius: 100px;
+	}
+	&.recom {
+		background: #fdf8f0;
+		color: $base-color;
+		&:after {
+			border-color: #eae0d1;
+		}
+	}
+}
+
+
+/* 商品列表 分类 */
+.cate-mask {
+	position: fixed;
+	left: 0;
+	top: var(--window-top);
+	bottom: 0;
+	width: 100%;
+	background: rgba(0, 0, 0, 0);
+	z-index: 95;
+	transition: 0.3s;
+
+	.cate-content {
+		position: relative;
+		width: 630upx;
+		height: 100%;
+		background: #fff;
+		float: right;
+		transform: translateX(100%);
+		transition: 0.3s;
+		padding-bottom: 80upx;
+		.reset-cate {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			text-align: center;
+			width: 100%;
+			line-height: 80upx;
+			background: #555;
+			color: #fff;
+		}
+	}
+	&.none {
+		display: none;
+	}
+	&.show {
+		background: rgba(0, 0, 0, 0.4);
+
+		.cate-content {
+			transform: translateX(0);
+		}
+	}
+}
+.cate-list {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	.cate-item {
+		display: flex;
+		align-items: center;
+		height: 90upx;
+		padding-left: 30upx;
+		font-size: 28upx;
+		color: #555;
+		position: relative;
+	}
+	.two {
+		height: 64upx;
+		color: #303133;
+		font-size: 30upx;
+		background: #f8f8f8;
+	}
+	.active {
+		color: $base-color;
+	}
+}

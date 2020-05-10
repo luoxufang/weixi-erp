@@ -1,0 +1,153 @@
+{
+	"pages": [
+		{
+			"path": "pages/main/main",
+			"style": {
+				"navigationBarTitleText": "唯希"
+			}
+		}, {
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		}, {
+			"path": "pages/public/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		}, {
+			"path": "pages/public/register",
+			"style": {
+				"navigationBarTitleText": "注册"
+			}
+		}, {
+			"path": "pages/reg/reg",
+			"style": {
+				"navigationBarTitleText": "注册"
+			}
+		}, {
+			"path": "pages/pwd/pwd",
+			"style": {
+				"navigationBarTitleText": "找回密码"
+			}
+		}, {
+			"path": "pages/user/user",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		}, {
+			"path": "pages/ranking/ranking",
+			"style": {
+				"navigationBarTitleText": "销售排名"
+			}
+		}, {
+			"path": "pages/trend/trend",
+			"style": {
+				"navigationBarTitleText": "平均库存趋势"
+			}
+		}, {
+			"path": "pages/shop/shop",
+			"style": {
+				"navigationBarTitleText": "选择店铺"
+			}
+		}, {
+			"path": "pages/table/table",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		}
+		
+		// 销售 三模块
+		, {
+			"path": "pages/sale/order",
+			"style": {
+				"navigationBarTitleText": "销售订单"
+			}
+		}, {
+			"path": "pages/sale/checkout",
+			"style": {
+				"navigationBarTitleText": "销售出库"
+			}
+		}, {
+			"path": "pages/sale/bill",
+			"style": {
+				"navigationBarTitleText": "应收帐单"
+			}
+		}
+
+		// 采购 三模块
+		, {
+			"path": "pages/purchase/order",
+			"style": {
+				"navigationBarTitleText": "采购订单"
+			}
+		}, {
+			"path": "pages/purchase/laidup",
+			"style": {
+				"navigationBarTitleText": "采购入库"
+			}
+		}, {
+			"path": "pages/purchase/bill",
+			"style": {
+				"navigationBarTitleText": "应收账款"
+			}
+		}
+
+		// 库存 模块
+		, {
+			"path": "pages/stock/stock",
+			"style": {
+				"navigationBarTitleText": "即时库存"
+			}
+		}
+		
+		// 生产 两模块
+		, {
+			"path": "pages/produce/selfmade",
+			"style": {
+				"navigationBarTitleText": "自制计划单"
+			}
+		}, {
+			"path": "pages/produce/entrust",
+			"style": {
+				"navigationBarTitleText": "计划单"
+			}
+		}
+
+
+		, {
+			"path": "pages/interest/analyse",
+			"style": {
+				"navigationBarTitleText": "客户获利"
+			}
+		}, {
+			"path": "pages/costdown/costdown",
+			"style": {
+				"navigationBarTitleText": "采购COSTDOWN"
+			}
+		}
+	],
+	// "tabBar": {
+	// 	"color": "#7a7e83",
+	// 	"selectedColor": "#0faeff",
+	// 	"backgroundColor": "#ffffff",
+	// 	"list": [
+	// 		{
+	// 			"pagePath": "pages/main/main",
+	// 			"text": "首页",
+	// 			"iconPath": "static/img/home.png",
+	// 			"selectedIconPath": "static/img/homeHL.png"
+	// 		}, {
+	// 			"pagePath": "pages/user/user",
+	// 			"text": "我的",
+	// 			"iconPath": "static/img/user.png",
+	// 			"selectedIconPath": "static/img/userHL.png"
+	// 		}
+	// 	]
+	// },
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarBackgroundColor": "#ffffff",
+		"backgroundColor": "#fbf9fe"
+	}
+}
