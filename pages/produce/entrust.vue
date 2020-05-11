@@ -160,10 +160,14 @@ export default {
 		let day2 = new Date();
 		if(day2.getMonth()+1<10){
 			var Month = '0'+(day2.getMonth()+1)
-		}
+		}else{
+      var Month = (day2.getMonth()+1)
+    }
 		if(day2.getDate()<10){
 			var date = '0'+day2.getDate()
-		}
+		}else{
+      var date = day2.getDate()
+    }
 		var today = day2.getFullYear()+"-" + Month + "-" + date;
 		this.startDate = today
 		this.endDate = today
@@ -187,8 +191,21 @@ export default {
 		},
 		confirm(e){
 			console.log(e.range)
-			this.startDate = e.range.before
-			this.endDate = e.range.before
+			if(e.range.before && e.range.after){
+        var time1=new Date(e.range.before);
+        var time2=new Date(e.range.after);
+        if(time2>time1){
+          this.startDate = e.range.before
+          this.endDate = e.range.after
+        }else{
+          this.startDate = e.range.after
+          this.endDate = e.range.before
+        }
+        
+      } else {
+        this.startDate = e.fulldate
+        this.endDate = e.fulldate
+      }
 		}
   }
 }
