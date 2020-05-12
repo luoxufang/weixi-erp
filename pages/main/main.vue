@@ -1,16 +1,44 @@
 <template>
 	<view class="main-box">
+		<tui-skeleton v-if="skeletonShow" backgroundColor="#fafafa" borderRadius="10rpx"></tui-skeleton>
 		<!-- @click="navTo('/pages/public/login')" -->
 		<view class="data-news">
 			<view class="left-view">
 				<view v-for="(fitem, index) in flist" :key="fitem.id" class="f-item b-b" :class="{ active: fitem.id === currentId }" @click="tabtap(fitem, index)">{{ fitem.label }}</view>
 			</view>
 			<view class="right-view" @click="navTo(`/pages/table/table`)">
-				<view class="">
+				<view class="" v-if="currentType=='Receipt'">
 					<view class="boss">BOSS:</view>
 					<view class="notice">恭喜你今天又接了0.00元订单</view>
 					<view class="notice">近五日接了0.00元订单</view>
 					<view class="notice">近一个月接了0.00元订单</view>
+				</view>
+				<view class="" v-if="currentType=='Stock'">
+					<view class="boss">BOSS:</view>
+					<view class="notice">公司久滞库存30天以上0.00元</view>
+					<view class="notice">60天以上0.00元</view>
+					<view class="notice">90天以上0.00元</view>
+				</view>
+				<view class="" v-if="currentType=='Money'">
+					<view class="boss">BOSS:</view>
+					<view class="notice">你的过期应收款是0.00元</view>
+					<view class="notice">逾期付款0.00元</view>
+				</view>
+				<view class="" v-if="currentType=='Price'">
+					<view class="boss">BOSS:</view>
+					<view class="notice">你的价格波动超过5%的有0条</view>
+					<view class="notice">请点开核实一下呀！</view>
+				</view>
+				<view class="" v-if="currentType=='Delivery'">
+					<view class="boss">BOSS:</view>
+					<view class="notice">你的超过交期的销售订单是0.00元</view>
+					<view class="notice">超过交期的采购订单0.00元</view>
+					<view class="notice">是否忘记出入库还是真的超交期？</view>
+				</view>
+				<view class="" v-if="currentType=='Produce'">
+					<view class="boss">BOSS:</view>
+					<view class="notice">你的超过交期的生产订单有0条</view>
+					<view class="notice">是否忘记入库还是真的超交期？</view>
 				</view>
 
 				<view class="select-company"  @click.stop="toggleSpec()">
@@ -107,6 +135,7 @@
 </template>
 
 <script>
+  import tuiSkeleton from "@/components/tui-skeleton/tui-skeleton"
 	import {
 		mapState
 	} from 'vuex'
@@ -114,15 +143,16 @@
 	export default {
 		data(){
 			return {
+				skeletonShow: true,
 				currentType: 'Receipt',
 				specClass: 'none',
 				flist: [ // 今日播报，菜单选项
-					{ id:1, label: '接单' },
-					{ id:2, label: '库存' },
-					{ id:3, label: '收款' },
-					{ id:4, label: '价格' },
-					{ id:5, label: '交期' },
-					{ id:6, label: '生产' }
+					{ id:1, label: '接单', loaded: false },
+					{ id:2, label: '库存', loaded: false },
+					{ id:3, label: '收款', loaded: false },
+					{ id:4, label: '价格', loaded: false },
+					{ id:5, label: '交期', loaded: false },
+					{ id:6, label: '生产', loaded: false }
 				],
 				currentId: 1,//当前一级id
 				reportManagement: [
@@ -243,6 +273,10 @@
 			this.shopname = uni.getStorageSync('shopname')
 		},
 		async onLoad() {
+			setTimeout(() => {
+				this.skeletonShow = false
+			}, 1800);
+			
 			// if (this.hasLogin) {
 			// 	uni.showModal({
 			// 		title: '未登录',
@@ -293,6 +327,7 @@
 				});
 				console.log(result,'接单')
 				if (result.ret === 1) {
+					this.flist[this.currentId].loaded = true
 					console.log(result.data)
 				} else {
 					this.$api.msg(result.erroinfo);
@@ -400,35 +435,44 @@
 				});
 			},
 			tabtap(fitem, index){
-				this.currentId = fitem.id
+				
 				switch (index) {
 					case 0:
 						this.currentType = "Receipt"
+						if(fitem.loaded) return
 						this.getOrderInfo()
 						break;
 					case 1:
 						this.currentType = "Stock"
+						if(fitem.loaded) return
 						this.getngstockInfo()
 						break;
 					case 2:
 						this.currentType = "Money"
+						if(fitem.loaded) return
 						this.getrecInfo()
 						break;
 					case 3:
 						this.currentType = "Price"
+						if(fitem.loaded) return
 						this.getpriceInfo()
 						break;
 					case 4:
 						this.currentType = "Delivery"
+						if(fitem.loaded) return
 						this.getoverdateInfo()
 						break;
 					case 5:
 						this.currentType = "Produce"
+						if(fitem.loaded) return
+
 						break;
 				
 					default:
 						break;
 				}
+				// 设置当前 tab id 
+				this.currentId = fitem.id
 			},
 			clickDownGo(type, index, url){
 				switch(type){
