@@ -1,28 +1,28 @@
 <template>
-	<view class="main-box">
+	<view class="main-box tui-skeleton">
 		<tui-skeleton v-if="skeletonShow" backgroundColor="#fafafa" borderRadius="10rpx"></tui-skeleton>
 		<!-- @click="navTo('/pages/public/login')" -->
-		<view class="data-news">
+		<view class="data-news tui-skeleton-rect">
 			<view class="left-view">
 				<view v-for="(fitem, index) in flist" :key="fitem.id" class="f-item b-b" :class="{ active: fitem.id === currentId }" @click="tabtap(fitem, index)">{{ fitem.label }}</view>
 			</view>
 			<view class="right-view" @click="navTo(`/pages/table/table`)">
 				<view class="" v-if="currentType=='Receipt'">
 					<view class="boss">BOSS:</view>
-					<view class="notice">恭喜你今天又接了0.00元订单</view>
-					<view class="notice">近五日接了0.00元订单</view>
-					<view class="notice">近一个月接了0.00元订单</view>
+					<view class="notice">恭喜你今天又接了{{getorderData.todayamount}}元订单</view>
+					<view class="notice">近五日接了{{getorderData.todayamount}}元订单</view>
+					<view class="notice">近一个月接了{{getorderData.todayamount}}元订单</view>
 				</view>
 				<view class="" v-if="currentType=='Stock'">
 					<view class="boss">BOSS:</view>
-					<view class="notice">公司久滞库存30天以上0.00元</view>
-					<view class="notice">60天以上0.00元</view>
-					<view class="notice">90天以上0.00元</view>
+					<view class="notice">公司久滞库存30天以上{{getngstockData.last30amount}}元</view>
+					<view class="notice">60天以上{{getngstockData.last60amount}}元</view>
+					<view class="notice">90天以上{{getngstockData.last90amount}}元</view>
 				</view>
 				<view class="" v-if="currentType=='Money'">
 					<view class="boss">BOSS:</view>
-					<view class="notice">你的过期应收款是0.00元</view>
-					<view class="notice">逾期付款0.00元</view>
+					<view class="notice">你的过期应收款是{{getrecData.payamount}}元</view>
+					<view class="notice">逾期付款{{getrecData.recamount}}元</view>
 				</view>
 				<view class="" v-if="currentType=='Price'">
 					<view class="boss">BOSS:</view>
@@ -53,10 +53,10 @@
 		<!-- 数据管理 -->
 		<view class="fuction-box">
 			<view class="item-list-box">
-				<view class="blue-view">报表管理</view>
+				<view class="blue-view tui-skeleton-fillet">报表管理</view>
 				<view class="item-box">
 					<view class="item-btn" v-for="(itemf, index) in reportManagement" :key="itemf.index">
-						<view class="item-btn-title" @click="clickDownGo('1', itemf.index, itemf.url)">
+						<view class="item-btn-title tui-skeleton-fillet" @click="clickDownGo('1', itemf.index, itemf.url)">
 							<text>{{itemf.name}}</text>
 							<!-- <text class="yticon icon-you"></text> -->
 						</view>
@@ -72,10 +72,10 @@
 			</view>
 
 			<view class="item-list-box">
-				<view class="blue-view">功能操作</view>
+				<view class="blue-view tui-skeleton-fillet">功能操作</view>
 				<view class="item-box">
 					<view class="item-btn" v-for="(itemf, index) in fuctionList" :key="itemf.index">
-						<view class="item-btn-title" @click="clickDownGo('2', itemf.index, itemfurl)">
+						<view class="item-btn-title tui-skeleton-fillet" @click="clickDownGo('2', itemf.index, itemfurl)">
 							<text>{{itemf.name}}</text>
 							<!-- <text class="yticon icon-you"></text> -->
 						</view>
@@ -91,10 +91,10 @@
 			</view>
 
 			<view class="item-list-box">
-				<view class="blue-view">数据考核</view>
+				<view class="blue-view tui-skeleton-fillet">数据考核</view>
 				<view class="item-box">
 					<view class="item-btn" v-for="(itemf, index) in dataCheck" :key="itemf.index">
-						<view class="item-btn-title" @click="clickDownGo('3', itemf.index, itemf.url)">
+						<view class="item-btn-title tui-skeleton-fillet" @click="clickDownGo('3', itemf.index, itemf.url)">
 							<text>{{itemf.name}}</text>
 							<!-- <text class="yticon icon-you"></text> -->
 						</view>
@@ -135,17 +135,35 @@
 </template>
 
 <script>
-  import tuiSkeleton from "@/components/tui-skeleton/tui-skeleton"
+	import tuiSkeleton from "@/components/tui-skeleton/tui-skeleton"
+	import util from '@/util.js';
 	import {
 		mapState
 	} from 'vuex'
 
 	export default {
+		components:{
+			tuiSkeleton
+		},
 		data(){
 			return {
 				skeletonShow: true,
 				currentType: 'Receipt',
 				specClass: 'none',
+				getorderData:{
+					todayamount:'0',
+					last5amount:'0',
+					lastmonthamount:'0',
+				},
+				getngstockData:{
+					last30amount:'0',
+					last60amount:'0',
+					last90amount:'0',
+				},
+				getrecData:{
+					payamount:'0',
+					recamount:'0',
+				},
 				flist: [ // 今日播报，菜单选项
 					{ id:1, label: '接单', loaded: false },
 					{ id:2, label: '库存', loaded: false },
@@ -271,12 +289,15 @@
 				console.log(this.shopname)
 			}
 			this.shopname = uni.getStorageSync('shopname')
+
+			// 变相可刷新今日播报各板块
+			let flist = this.flist
+			flist.forEach(item => {
+				item.loaded = false
+			});
+			this.flist = flist
 		},
 		async onLoad() {
-			setTimeout(() => {
-				this.skeletonShow = false
-			}, 1800);
-			
 			// if (this.hasLogin) {
 			// 	uni.showModal({
 			// 		title: '未登录',
@@ -327,8 +348,13 @@
 				});
 				console.log(result,'接单')
 				if (result.ret === 1) {
-					this.flist[this.currentId].loaded = true
-					console.log(result.data)
+					this.skeletonShow = false // 骨架屏 隐藏
+					this.$api.msg(result.erroinfo);
+					this.flist[this.currentId-1].loaded = true
+					// console.log(result.data)
+					this.getorderData.todayamount = result.data.todayamount
+					this.getorderData.last5amount = result.data.last5amount
+					this.getorderData.lastmonthamount = result.data.lastmonthamount
 				} else {
 					this.$api.msg(result.erroinfo);
 				}
@@ -341,7 +367,13 @@
 				});
 				console.log(result,'库存')
 				if (result.ret === 1) {
-					console.log(result.data)
+					this.$api.msg(result.erroinfo);
+					this.flist[this.currentId-1].loaded = true
+					// console.log(result.data)
+					console.log(parseFloat(result.data.last30amount))
+					this.getngstockData.last30amount = util.convertDigital(parseFloat(result.data.last30amount))
+					this.getngstockData.last60amount = util.convertDigital(parseFloat(result.data.last60amount))
+					this.getngstockData.last90amount = util.convertDigital(parseFloat(result.data.last90amount))
 				} else {
 					this.$api.msg(result.erroinfo);
 				}
@@ -354,7 +386,10 @@
 				});
 				console.log(result,'收款')
 				if (result.ret === 1) {
-					console.log(result.data)
+					this.flist[this.currentId-1].loaded = true
+					// console.log(result.data)
+					this.getrecData.payamount = util.convertDigital(parseFloat(result.data.payamount))
+					this.getrecData.recamount = util.convertDigital(parseFloat(result.data.recamount))
 				} else {
 					this.$api.msg(result.erroinfo);
 				}
@@ -367,6 +402,7 @@
 				});
 				console.log(result,'价格')
 				if (result.ret === 1) {
+					this.flist[this.currentId-1].loaded = true
 					console.log(result.data)
 				} else {
 					this.$api.msg(result.erroinfo);
@@ -380,6 +416,7 @@
 				});
 				console.log(result,'交期')
 				if (result.ret === 1) {
+					this.flist[this.currentId-1].loaded = true
 					console.log(result.data)
 				} else {
 					this.$api.msg(result.erroinfo);
@@ -435,15 +472,18 @@
 				});
 			},
 			tabtap(fitem, index){
-				
+				// 设置当前 tab id 
+				this.currentId = fitem.id
 				switch (index) {
 					case 0:
 						this.currentType = "Receipt"
+						console.log(fitem)
 						if(fitem.loaded) return
 						this.getOrderInfo()
 						break;
 					case 1:
 						this.currentType = "Stock"
+						console.log(fitem)
 						if(fitem.loaded) return
 						this.getngstockInfo()
 						break;
@@ -471,8 +511,6 @@
 					default:
 						break;
 				}
-				// 设置当前 tab id 
-				this.currentId = fitem.id
 			},
 			clickDownGo(type, index, url){
 				switch(type){

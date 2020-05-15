@@ -175,9 +175,27 @@ export default {
 		this.endDate = today
 		console.log(options)
 		this.tableType = options.type
+		this.getTableData(today,today)
 		
 	},
   methods:{
+		async getTableData(startdate,enddate){
+			const result = await this.$api.interfaceApi('getorderlist')({
+				token: uni.getStorageSync('token'),
+				shopid: uni.getStorageSync('shopid'),
+				startdate: startdate,
+				enddate: enddate?enddate:'',
+				keyword: '',
+				billtype:'11', // 11销售订单 12采购订单
+			});
+			console.log(result)
+			if (result.ret === 1) {
+					this.$api.msg(result.erroinfo);
+					console.log(result.data)
+				} else {
+					this.$api.msg(result.erroinfo);
+				}
+		},
     search(e){
 			console.log(e)
 		},
@@ -198,15 +216,18 @@ export default {
         var time2=new Date(e.range.after);
         if(time2>time1){
           this.startDate = e.range.before
-          this.endDate = e.range.after
+					this.endDate = e.range.after
+					this.getTableData(e.range.before,e.range.after)
         }else{
           this.startDate = e.range.after
-          this.endDate = e.range.before
-        }
+					this.endDate = e.range.before
+					this.getTableData(e.range.after,e.range.before)
+				}
         
       } else {
         this.startDate = e.fulldate
-        this.endDate = e.fulldate
+				this.endDate = e.fulldate
+				this.getTableData(e.fulldate,e.fulldate)
       }
 		}
   }

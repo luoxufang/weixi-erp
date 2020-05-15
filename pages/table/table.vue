@@ -1,14 +1,18 @@
 <template>
 	<view class="table-box" style="background:#fff;">
-		<view class="notice-text" v-if="tableType =='Receipt'">今天接了<text class="red">（XXX）</text>万元订单，近5日接了<text class="red">（XX）</text>万订单，近一个月CXX</view>
-		<view class="notice-text" v-else-if="tableType =='Stock'">公司久滞留库存30天以上<text class="red">（XXX）</text>万元，60以上<text class="red">（XXX）</text>万元，90天以上<text class="red">（XXX）</text>万元</view>
-		<view class="notice-text" v-else-if="tableType =='Money'">过期应收款是<text class="red">（XXX）</text>万元，逾期付款<text class="red">（XXX）</text>万元</view>
-		<view class="notice-text" v-else-if="tableType =='Price'">你的价格波动<text class="red">（XXX）</text>%</view>
+		<view class="notice-text" v-if="tableType =='Receipt'">今天接了<text class="red">0.00</text>万元订单，近5日接了<text class="red">0.00</text>万订单，近一个月0</view>
+		<view class="notice-text" v-else-if="tableType =='Stock'">公司久滞留库存30天以上<text class="red">0.00</text>万元，60以上<text class="red">0.00</text>万元，90天以上<text class="red">0.00</text>万元</view>
+		<view class="notice-text" v-else-if="tableType =='Money'">过期应收款是<text class="red">0.00</text>万元，逾期付款<text class="red">0.00</text>万元</view>
+		<view class="notice-text" v-else-if="tableType =='Price'">你的价格波动<text class="red">0.00</text>%</view>
 		<view class="notice-text" v-else-if="tableType =='Delivery'">
-			你的超过交期的订单是<text class="red">（XXX）</text>万元，超过交期的采购订单<text class="red">（XXX）</text>万元，是否忘入库还是真的超交期？
+			你的超过交期的订单是<text class="red">0.00</text>万元，超过交期的采购订单<text class="red">0.00</text>万元，是否忘入库还是真的超交期？
 		</view>
-		<view class="notice-text" v-else-if="tableType =='Produce'">你超过的交期生产订单是<text class="red">（XXX）</text>，是否忘记入库还是真的超交期？</view>
-    
+		<view class="notice-text" v-else-if="tableType =='Produce'">你超过的交期生产订单是<text class="red">0.00</text>，是否忘记入库还是真的超交期？</view>
+    <!-- 接单的时间组件 -->
+		<view class="data-box" @click="open">
+			<view class="firstTime">{{startDate}}</view>
+			<image class="image" src="/static/xiala.png" />
+		</view>
 		<!-- 价格 选择 -->
 		<view class="btn-box" v-if="commomType=='Price'||commomType=='PriceSupplier'">
 			<view class="commomStyle left" :class="commomType=='Price'?'active':''" @click="changePriceType(1)">客户</view>
@@ -39,16 +43,37 @@
 			<z-table :tableData="allTableData[commomType+'TableData']" :columns="allTableData[commomType+'Columns']" stickSide='true'></z-table>
 		</view>
 
+		<uni-calendar ref="calendar" 
+		:date="info.date" 
+		:insert="info.insert" 
+		:lunar="info.lunar" 
+		:startDate="info.startDate" 
+		:endDate="info.endDate" 
+		:range="info.range" 
+		@confirm="confirm" />
+
   </view>
 </template>
 <script>
 import zTable from "../../components/z-table/z-table.vue";
+import uniCalendar from '@/components/uni-calendar/uni-calendar.vue'
 export default {
     components: {
-      zTable
+			zTable,
+			uniCalendar
     },
   data(){
     return{
+			startDate: '2020-5-10',
+			info: {
+				date: '',
+				startDate: '',
+				endDate: '',
+				lunar: true,
+				range: false,
+				insert: false,
+				selected: []
+			},
 			commomType: '',
 			tableType: '',
 			// 固定左侧
@@ -95,9 +120,9 @@ export default {
 					width: 200
 				}],
 				ReceiptTableData: [{
-					name: "李六",
+					name: "秦天明",
 					time: "2020-04-28",
-					people: "小明",
+					people: "张坤",
 					order: '454155',
 					code: "20201122",
 					proName: "西瓜",
@@ -105,9 +130,9 @@ export default {
 					price: "2000",
 					proMoney: "1000.00"
 				}, {
-					name: "李六",
+					name: "秦天明",
 					time: "2020-04-28",
-					people: "小明",
+					people: "张坤",
 					order: '454155',
 					code: "20201122",
 					proName: "西瓜",
@@ -115,9 +140,9 @@ export default {
 					price: "2000",
 					proMoney: "1000.00"
 				}, {
-					name: "李六",
+					name: "秦天明",
 					time: "2020-04-28",
-					people: "小明",
+					people: "张坤",
 					order: '454155',
 					code: "20201122",
 					proName: "西瓜",
@@ -125,9 +150,9 @@ export default {
 					price: "2000",
 					proMoney: "1000.00"
 				}, {
-					name: "李六",
+					name: "秦天明",
 					time: "2020-04-28",
-					people: "小明",
+					people: "张坤",
 					order: '454155',
 					code: "20201122",
 					proName: "西瓜",
@@ -603,11 +628,29 @@ export default {
     }
   },
 	onLoad(options){
+		//今天的时间
+		let day2 = new Date();
+		if(day2.getMonth()+1<10){
+			var Month = '0'+(day2.getMonth()+1)
+		}else{
+      var Month = (day2.getMonth()+1)
+		}
+		if(day2.getDate()<10){
+			var date = '0'+day2.getDate()
+		}else{
+      var date = day2.getDate()
+		}
+		var today = day2.getFullYear()+"-" + Month + "-" + date;
+		this.startDate = today
+		console.log(this.startDate)
+
+
 		console.log(options)
 		this.tableType = options.type
 		switch (options.type) {
 			case 'Receipt':
 				var title = '接单'
+				this.getTableData(today)
 				break;
 			case "Stock":
 				var title = '库存'
@@ -631,8 +674,27 @@ export default {
 		uni.setNavigationBarTitle({
 			title
 		});
+
+
 	},
   methods:{
+	  async getTableData(today){
+			const result = await this.$api.interfaceApi('getorderlist')({
+				token: uni.getStorageSync('token'),
+				shopid: uni.getStorageSync('shopid'),
+				startdate: today,
+				enddate: '',
+				keyword: '',
+				billtype:'11', // 11销售订单 12采购订单
+			});
+			console.log(result)
+			if (result.ret === 1) {
+					this.$api.msg(result.erroinfo);
+					console.log(result.data)
+				} else {
+					this.$api.msg(result.erroinfo);
+				}
+		},
     changePriceType(type){
 			if(type===1 && this.commomType=='PriceSupplier'){
 				console.log(type)
@@ -648,6 +710,28 @@ export default {
 			} else if(type===2 && this.commomType=='Delivery'){
 				this.commomType = 'DeliverySupplier'
 			}
+		},
+		open() {
+			this.$refs.calendar.open()
+		},
+		confirm(e){
+			console.log(e.range)
+			if(e.range.before && e.range.after){
+        var time1=new Date(e.range.before);
+        var time2=new Date(e.range.after);
+        if(time2>time1){
+          this.startDate = e.range.before
+          this.endDate = e.range.after
+        }else{
+          this.startDate = e.range.after
+          this.endDate = e.range.before
+        }
+        
+      } else {
+        this.startDate = e.fulldate
+				// this.endDate = e.fulldate
+				this.getTableData(e.fulldate)
+      }
 		}
   }
 }
@@ -692,6 +776,20 @@ export default {
 				color: #fff;
 			}
 		}
+	}
+}
+.data-box{
+	display: flex;
+	align-items: center;
+	padding: 0 20upx;
+	font-size: 28upx;
+	margin-bottom: 20upx;
+	text{
+		margin: 0 20upx;
+	}
+	.image{
+		width: 28upx;
+		height: 28upx;
 	}
 }
 

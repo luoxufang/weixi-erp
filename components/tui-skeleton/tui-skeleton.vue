@@ -49,7 +49,7 @@
 			//是否需要loading
 			isLoading: {
 				type: Boolean,
-				default: true
+				default: false
 			},
 			//loading类型[1-10]
 			loadingType: {

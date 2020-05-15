@@ -21,6 +21,7 @@ function requestAction(options) {
 	}
 	reqOptions.url = baseUrl + reqOptions.url;
 	return new Promise((resolve, reject) => {
+		uni.showLoading();
 		let reqConfig = Object.assign({
 			url: "",
 			data: "",
@@ -28,9 +29,11 @@ function requestAction(options) {
 			header: header,
 			success: function(res) {
 				resolve(res.data);
+				uni.hideLoading();
 			},
 			fail: function(res) {
 				reject(res);
+				uni.hideLoading();
 			}
 		}, reqOptions);
 		uni.request(reqConfig);
