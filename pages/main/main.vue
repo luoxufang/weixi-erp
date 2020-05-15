@@ -423,6 +423,7 @@
 				}
 			},
 			loginout(){
+				let that = this;
 				uni.showModal({
 					content: '确定退出登录？',
 					success: function (res) {
@@ -430,7 +431,7 @@
 							uni.setStorageSync('token', '');
 							uni.setStorageSync('shopid', '');
 							// 隐藏 Toast
-							this.toggleSpec();
+							that.toggleSpec();
 							uni.redirectTo({
 								url:'/pages/public/login'
 							});
