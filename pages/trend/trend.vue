@@ -16,23 +16,60 @@
 		<view class="qiun-charts" >
 			<canvas canvas-id="canvasLineA" id="canvasLineA" class="charts" @touchstart="touchLineA"></canvas>
 		</view>
+
+
+		<uni-calendar ref="calendar" 
+		:date="info.date" 
+		:insert="info.insert" 
+		:lunar="info.lunar" 
+		:startDate="info.startDate" 
+		:endDate="info.endDate" 
+		:range="info.range" 
+		@confirm="confirm" />
+
 	</view>
 </template>
 
 <script>
+  import uniCalendar from '@/components/uni-calendar/uni-calendar.vue'
 	import uCharts from '@/components/u-charts/u-charts.js';
 	var _self;
 	var canvaLineA=null;
 	export default {
+		components:{
+			uniCalendar
+		},
 		data() {
 			return {
 				cWidth:'',
 				cHeight:'',
 				pixelRatio:1,
-				dataList:''
+				dataList:'',
+
+				startDate:'',
+				endDate:'',
+				today:'',
 			}
 		},
 		onLoad() {
+			//今天的时间
+			let day2 = new Date();
+			if(day2.getMonth()+1<10){
+				var Month = '0'+(day2.getMonth()+1)
+			}else{
+				var Month = (day2.getMonth()+1)
+			}
+			if(day2.getDate()<10){
+				var date = '0'+day2.getDate()
+			}else{
+				var date = day2.getDate()
+			}
+			var today = day2.getFullYear()+"-" + Month + "-" + date;
+			this.today = today
+			this.startDate = today
+			this.endDate = today
+
+
 			_self = this;
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
@@ -127,6 +164,30 @@
 						return category + ' ' + item.name + ':' + item.data 
 					}
 				});
+			},
+			open() {
+				this.$refs.calendar.open()
+			},
+			confirm(e){
+				console.log(e.range)
+				if(e.range.before && e.range.after){
+					var time1=new Date(e.range.before);
+					var time2=new Date(e.range.after);
+					if(time2>time1){
+						this.startDate = e.range.before
+						this.endDate = e.range.after
+						// this.getmrpitemlist(e.range.before,e.range.after)
+					}else{
+						this.startDate = e.range.after
+						this.endDate = e.range.before
+						// this.getmrpitemlist(e.range.after,e.range.before)
+					}
+					
+				} else {
+					this.startDate = e.fulldate
+					this.endDate = e.fulldate
+					// this.getmrpitemlist(e.fulldate,e.fulldate)
+				}
 			}
 		}
 	}

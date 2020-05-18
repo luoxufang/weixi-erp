@@ -46,8 +46,9 @@ export default {
     },
   data(){
     return{
-			startDate: '',
-			endDate: '',
+			startDate: '',// 初始开始时间
+			endDate: '',// 初始结束时间
+			keyword: '',// 搜索关键词
 			showCalendar: false,
 			info: {
 				date: '',
@@ -121,7 +122,7 @@ export default {
 				shopid: uni.getStorageSync('shopid'),
 				startdate: startdate,
 				enddate: enddate,
-				keyword: '',
+				keyword: this.keyword,
 				billtype:'1',
 				condition: ''
 			});
@@ -143,10 +144,13 @@ export default {
 			}
 	  },
     search(e){
-			console.log(e)
+			console.log(this.keyword)
+			// if(!this.keyword) return
+			this.nowToStock(this.startDate, this.endDate)
 		},
 		input(e){
 			// console.log(e)
+			this.keyword = e.value
 		},
 		changeData(type){
 			this.timeType = type
@@ -162,15 +166,18 @@ export default {
         var time2=new Date(e.range.after);
         if(time2>time1){
           this.startDate = e.range.before
-          this.endDate = e.range.after
+					this.endDate = e.range.after
+					this.nowToStock(e.range.before,e.range.after)
         }else{
           this.startDate = e.range.after
-          this.endDate = e.range.before
+					this.endDate = e.range.before
+					this.nowToStock(e.range.after,e.range.before)
         }
         
       } else {
         this.startDate = e.fulldate
-        this.endDate = e.fulldate
+				this.endDate = e.fulldate
+				this.nowToStock(e.fulldate,e.fulldate)
       }
 		}
   }

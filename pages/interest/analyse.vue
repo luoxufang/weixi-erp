@@ -36,20 +36,8 @@
 				<view class="kehu-title">请选择要查看的客户</view>
 
         <view class="people-list">
-          <view class="item-btn-box">
-            <button class="item-btn" type="default" size="mini">全部</button>
-          </view>
-          <view class="item-btn-box">
-            <button class="item-btn" type="default" size="mini">客户一</button>
-          </view>
-          <view class="item-btn-box">
-            <button class="item-btn" type="default" size="mini">客户一</button>
-          </view>
-          <view class="item-btn-box">
-            <button class="item-btn" type="default" size="mini">客户一</button>
-          </view>
-          <view class="item-btn-box">
-            <button class="item-btn" type="default" size="mini">客户一</button>
+          <view class="item-btn-box" v-for="(item, index) in custPeopleList" :key="index">
+            <button class="item-btn" type="default" :class="{'blueClass':currentCustId==item.id}" size="mini" @click="changeCust(item)">{{item.custname}}</button>
           </view>
           
         </view>
@@ -83,11 +71,18 @@ export default {
     },
   data(){
     return{
+      startDate: '',
+      endDate: '',
+      keyword: '',
+      // 当前客户id
+      currentCustId:'1',
+      // 客户列表
+      custPeopleList:[
+        {custname:'全部',id:'1'},
+      ],
       specClass: 'none',
       candidates: ['北京', '南京', '东京'],
 			city: '',
-			startDate: '',
-			endDate: '',
 			showCalendar: false,
 			info: {
 				date: '',
@@ -163,7 +158,7 @@ export default {
 		var today = day2.getFullYear()+"-" + Month + "-" + date;
 		this.startDate = today
 		this.endDate = today
-		console.log(today)
+		console.log(this.startDate,this.endDate,'44444')
 		this.tableType = options.type
     // 初始table
     this.getcustprofitlist(today,today)
@@ -178,8 +173,7 @@ export default {
 				shopid: uni.getStorageSync('shopid'),
 				startdate: startdate,
 				enddate: enddate,
-				keyword: '',
-				billtype:'11', // 11销售订单 12采购订单
+				keyword: this.keyword
 			});
 			if (result.ret === 1) {
 				
@@ -191,10 +185,9 @@ export default {
           //   item.
           //   return item
           // })
-
 				}else{
 					that.SaleOrderTableData = []
-					that.$api.msg('暂未无数据');
+					that.$api.msg('暂无数据');
 				}
 			} else {
 				that.$api.msg(result.erroinfo);
@@ -205,20 +198,34 @@ export default {
 				token: uni.getStorageSync('token'),
 				shopid: uni.getStorageSync('shopid'),
         keyword: '',
-        usertype: '1',
+        usertype: this.currentCustId,
       });
       
       if (result.ret === 1) {
-				if(result.data.result.length>0){
-					that.$api.msg(result.erroinfo);
-					that.custList = result.data.result
+				if(result.data.res_member.length){
+          this.$api.msg(result.erroinfo);
+          var aaaa = result.data.res_member.map((item)=>{
+            this.custPeopleList.push(item)
+            return item
+          })
 				}else{
-					that.custList = []
-					that.$api.msg('暂未无数据');
+					this.custPeopleList = []
+					// this.$api.msg('暂无数据');
 				}
 			} else {
-				that.$api.msg(result.erroinfo);
+				this.$api.msg(result.erroinfo);
 			}
+    },
+    changeCust(item){
+      if(this.currentCustId==item.id) return
+      var time1 = this.startDate
+      var time2 = this.endDate
+      this.currentCustId = item.id
+      this.keyword = item.custname
+      this.toggleSpec() // 隐藏弹窗
+      console.log(this.startDate, this.endDate,'9999')
+      
+      this.getcustprofitlist(time1, time2)
     },
     search(e){
 			console.log(e)
@@ -241,14 +248,18 @@ export default {
         if(time2>time1){
           this.startDate = e.range.before
           this.endDate = e.range.after
+          console.log(this.startDate,this.endDate,'44444')
+          this.getcustprofitlist(e.range.before,e.range.after)
         }else{
           this.startDate = e.range.after
           this.endDate = e.range.before
+          this.getcustprofitlist(e.range.after,e.range.before)
         }
         
       } else {
         this.startDate = e.fulldate
         this.endDate = e.fulldate
+        this.getcustprofitlist(e.fulldate,e.fulldate)
       }
     },
     confirmSelectPeople(){
@@ -371,18 +382,23 @@ button::after{
     flex-wrap: wrap;
     padding: 10upx 20upx;
     .item-btn-box{
-      width: 25%;
+      width: auto;
       padding-right: 20upx;
       box-sizing: border-box;
       margin-bottom: 16upx;
+      
       .item-btn{
         width: 100%;
         font-size: 28upx;
+        &.blueClass{
+          color: #fff;
+          background: #0084FF;
+        }
       }
     }
-    .item-btn-box:nth-child(4){
-      padding-right: 0;
-    }
+    // .item-btn-box:nth-child(4){
+    //   padding-right: 0;
+    // }
   }
   .confirm-btn{
     position: fixed;

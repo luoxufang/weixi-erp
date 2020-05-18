@@ -85,7 +85,7 @@ export default {
 				startDate: '2019-06-15',
 				endDate: '2019-010-15',
 				lunar: true,
-				range: false,
+				range: true,
 				insert: false,
 				selected: []
 			},

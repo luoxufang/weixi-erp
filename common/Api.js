@@ -244,7 +244,7 @@ const getstocktrendlist = params => {
 }
 
 
-// getoverdatelist  
+// 交期明细 overtype:1 销售订单 2采购订单 3生产订单  
 const getoverdatelist = params => {
 	let options = {
 		url: '/home/report/getoverdatelist',

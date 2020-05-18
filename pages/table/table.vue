@@ -663,13 +663,32 @@ export default {
 				}
 		},
 
-		//getoverdatelist
+		//交期明细 overtype:1 销售订单 2采购订单 3生产订单  
 		async getoverdatelist(today){
 			var that = this; 
 			const result = await that.$api.interfaceApi('getoverdatelist')({
 				token: uni.getStorageSync('token'),
 				shopid: uni.getStorageSync('shopid'),
 				overtype:'1', //1 销售订单 2采购订单 3生产订单
+			});
+			console.log(result)
+			if (result.ret === 1) {
+				that.$api.msg(result.erroinfo);
+				if(result.data.result.length){
+					// that.ReceiptTableData = result.data.result
+				}
+				console.log(that.ReceiptTableData)
+			} else {
+				that.$api.msg(result.erroinfo);
+			}
+		},
+		// 收款 
+		async getreclist(today){
+			var that = this; 
+			const result = await that.$api.interfaceApi('getreclist')({
+				token: uni.getStorageSync('token'),
+				shopid: uni.getStorageSync('shopid'),
+				rectype:'39', // 39应收款  40应付款
 			});
 			console.log(result)
 			if (result.ret === 1) {

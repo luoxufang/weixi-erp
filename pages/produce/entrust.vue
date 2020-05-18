@@ -6,7 +6,7 @@
 
 		<view class="time-btn">
 			<text style="font-size:28upx;">日期范围</text>
-			<button class="mini-btn" :class="timeType=='today'?'active':''" @click="changeData('today')" type="default" size="mini">本日</button>
+			<button class="mini-btn" :class="timeType=='today'&&today==startDate&&today==endDate?'active':''" @click="changeData('today')" type="default" size="mini">本日</button>
 			<button class="mini-btn" :class="timeType=='week'?'active':''" @click="changeData('week')" type="default" size="mini">本周</button>
 			<button class="mini-btn" :class="timeType=='month'?'active':''" @click="changeData('month')" type="default" size="mini">本月</button>
 			<button class="mini-btn" :class="timeType=='year'?'active':''" @click="changeData('year')" type="default" size="mini">本年</button>
@@ -39,6 +39,7 @@
 import zTable from "../../components/z-table/z-table.vue";
 import uniSearchBar from '@/components/uni-search-bar.vue';
 import uniCalendar from '@/components/uni-calendar/uni-calendar.vue'
+import util from '@/util.js';
 export default {
     components: {
 			zTable,
@@ -49,6 +50,7 @@ export default {
     return{
 			startDate: '',
 			endDate: '',
+			keyword: '',
 			showCalendar: false,
 			info: {
 				date: '',
@@ -60,8 +62,8 @@ export default {
 				selected: []
 			},
 			timeType: 'today',// week, month, year
+			today: '',
 			tableType: '',// 固定左侧
-
 			SaleOrderColumns: [{
 				title: "供应商",
 				key: "people",
@@ -135,6 +137,7 @@ export default {
       var date = day2.getDate()
     }
 		var today = day2.getFullYear()+"-" + Month + "-" + date;
+		this.today = today
 		this.startDate = today
 		this.endDate = today
 		console.log(options)
@@ -150,7 +153,7 @@ export default {
 				shopid: uni.getStorageSync('shopid'),
 				startdate: startdate,
 				enddate: enddate,
-				keyword: '',
+				keyword: this.keyword,
 				plantype:'2', // 1自制 2 外
 			});
 			if (result.ret === 1) {
@@ -174,15 +177,36 @@ export default {
 	  },
     search(e){
 			console.log(this.keyword)
-			if(!this.keyword) return
-			this.getmrpitemlist()
+			// if(!this.keyword) return
+			this.getmrpitemlist(this.startDate, this.endDate)
 		},
 		input(e){
 			// console.log(e)
+			this.keyword = e.value
 		},
 		changeData(type){
+			// 请求 相关 table :  today, week, month, year
+			if(this.timeType==type) return  // 处理重复点击
+
+			if(type=='today'){
+				this.getmrpitemlist(this.today, this.today)
+				this.startDate = this.today
+				this.endDate = this.today
+			}else if(type=='week'){
+				this.getmrpitemlist(util.getMonday("s",0), util.getMonday("e",0))
+				this.startDate = util.getMonday("s",0)
+				this.endDate = util.getMonday("e",0)
+			}else if(type=='month'){
+				this.getmrpitemlist(util.getMonth("s",0), util.getMonth("e",0))
+				this.startDate = util.getMonth("s",0)
+				this.endDate = util.getMonth("e",0)
+			}else if(type=='year'){
+				this.getmrpitemlist(util.getYear("s",0), util.getYear("e",0))
+				this.startDate = util.getYear("s",0)
+				this.endDate = util.getYear("e",0)
+			}
 			this.timeType = type
-			// 请求 相关 table
+			
 		},
 		open() {
 			this.$refs.calendar.open()
