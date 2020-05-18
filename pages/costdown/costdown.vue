@@ -95,96 +95,62 @@ export default {
 			SaleOrderColumns: [
 				{
 					title: "产品名称",
-					key: "produceNmae",
+					key: "prodname",
 					width: 200
 				}, {
 					title: "产品编号",
-					key: "produceCode",
+					key: "prodno",
 					width: 160
 				}, {
 					title: "选择期间",
-					key: "selectTime",
+					key: "prodno", // 自己加
 					width: 160
 				}, {
 					title: "采购数量",
-					key: "caigouNumber",
+					key: "totalcount",
 					width: 150
 				}, {
 					title: "采购价格",
-					key: "caigouMoney",
+					key: "totalamount",  // totalamount / totalcount
 					width: 150
 				}, {
 					title: "对比期间",
-					key: "duibiTime",
+					key: "prodno", // 自己 加时间
 					width: 160
 				}, {
 					title: "对比期间采购均价",
-					key: "aaaaa",
+					key: "lastavgprice",
 					width: 240
-				}, {
-					title: "采购成本",
-					key: "caigouchengben",
-					width: 100
-				}, {
+        }, 
+        // {
+				// 	title: "采购成本",
+				// 	key: "caigouchengben",
+				// 	width: 100
+        // }, 
+        {
 					title: "C/D金额",
-					key: "cdMoney",
+					key: "lastavgprice", // （lastavgprice*totalcount）-totalamount
 					width: 120
 				}, {
-					title: "C/DRate",
-					key: "cdRate",
+					title: "C/DRate", // ((totalamount/totalcount) -lastavgprice)/lastavgprice * 100  显示%
+					key: "totalamount",
 					width: 120
 				}
 			],
 			
 			SaleOrderTableData: [
-				{
-					produceNmae: "伊利纯正牛奶",
-          produceCode: '123456789',
-          selectTime: '2020-05-01',
-          caigouNumber: '8888',
-          caigouMoney: '999.99',
-          duibiTime: '2020-05-01',
-          aaaaa: '1000',
-          caigouchengben: '1000.00',
-          cdMoney: '1000.00',
-          cdRate: '100%',
-        },
-        {
-					produceNmae: "伊利纯正牛奶",
-          produceCode: '123456789',
-          selectTime: '2020-05-01',
-          caigouNumber: '8888',
-          caigouMoney: '999.99',
-          duibiTime: '2020-05-01',
-          aaaaa: '1000',
-          caigouchengben: '1000.00',
-          cdMoney: '1000.00',
-          cdRate: '100%',
-        },
-        {
-					produceNmae: "伊利纯正牛奶",
-          produceCode: '123456789',
-          selectTime: '2020-05-01',
-          caigouNumber: '8888',
-          caigouMoney: '999.99',
-          duibiTime: '2020-05-01',
-          aaaaa: '1000',
-          caigouchengben: '1000.00',
-          cdMoney: '1000.00',
-          cdRate: '100%',
-        },
-        {
-					produceNmae: "伊利纯正牛奶",
-          produceCode: '123456789',
-          selectTime: '2020-05-01',
-          caigouNumber: '8888',
-          caigouMoney: '999.99',
-          duibiTime: '2020-05-01',
-          aaaaa: '1000',
-          caigouchengben: '1000.00',
-          cdMoney: '1000.00',
-          cdRate: '100%',
-				},
+				// {
+				// 	produceNmae: "伊利纯正牛奶",
+        //   produceCode: '123456789',
+        //   selectTime: '2020-05-01',
+        //   caigouNumber: '8888',
+        //   caigouMoney: '999.99',
+        //   duibiTime: '2020-05-01',
+        //   aaaaa: '1000',
+        //   caigouchengben: '1000.00',
+        //   cdMoney: '1000.00',
+        //   cdRate: '100%',
+        // }
 			],
 
     }
@@ -207,9 +173,34 @@ export default {
 		this.endDate = today
 		console.log(options)
 		this.tableType = options.type
-		
+    
+    this.getcostdownlist(today,today)
 	},
   methods:{
+    // getcostdownlist
+    async getcostdownlist(startdate,enddate){
+      const result = await this.$api.interfaceApi('getcostdownlist')({
+				token: uni.getStorageSync('token'),
+        shopid: uni.getStorageSync('shopid'),
+        startdate: startdate,
+        enddate: enddate,
+        startdate2: startdate,
+        enddate2: enddate,
+        keyword: ''
+      });
+      
+      if (result.ret === 1) {
+				if(result.data.result.length>0){
+					this.$api.msg(result.erroinfo);
+					this.SaleOrderTableData = result.data.result
+				}else{
+					this.custList = []
+					this.$api.msg('暂无数据');
+				}
+			} else {
+				this.$api.msg(result.erroinfo);
+			}
+    },
     toggleSelect(){
       if (this.selectClass === 'show') {
         this.selectClass = 'hide';
@@ -241,14 +232,17 @@ export default {
         if(time2>time1){
           this.startDate = e.range.before
           this.endDate = e.range.after
+          this.getcostdownlist(e.range.before,e.range.after)
         }else{
           this.startDate = e.range.after
           this.endDate = e.range.before
+          this.getcostdownlist(e.range.after,e.range.before)
         }
         
       } else {
         this.startDate = e.fulldate
         this.endDate = e.fulldate
+        this.getcostdownlist(e.fulldate,e.fulldate)
       }
 		}
   }

@@ -132,10 +132,122 @@ const getprice = params => {
 	};
 	return requestAction(options)
 }
+
+// 价格波动 
+const getpricelist = params => {
+	let options = {
+		url: '/home/report/getpricelist',
+		data: params,
+	};
+	return requestAction(options)
+}
+
+
 // 交期 
 const getoverdate = params => {
 	let options = {
 		url: '/home/report/getoverdate',
+		data: params,
+	};
+	return requestAction(options)
+}
+
+// 出库 入库
+const getbillitemlist = params => {
+	let options = {
+		url: '/home/report/getbillitemlist',
+		data: params,
+	};
+	return requestAction(options)
+}
+
+// 逾期收款明细
+const getreclist = params => {
+	let options = {
+		url: '/home/report/getreclist',
+		data: params,
+	};
+	return requestAction(options)
+}
+
+// 应收应付账款  1客户 2供应商
+const getowelist = params => {
+	let options = {
+		url: '/home/report/getowelist',
+		data: params,
+	};
+	return requestAction(options)
+}
+
+// 实时库存  
+const nowToStock = params => {
+	let options = {
+		url: '/home/stock/index',
+		data: params,
+	};
+	return requestAction(options)
+}
+
+// 自制计划  委派计划  
+const getmrpitemlist = params => {
+	let options = {
+		url: '/home/report/getmrpitemlist',
+		data: params,
+	};
+	return requestAction(options)
+}
+
+// 客户获利分析 
+const getcustprofitlist = params => {
+	let options = {
+		url: '/home/report/getcustprofitlist',
+		data: params,
+	};
+	return requestAction(options)
+}
+
+// 客户列表
+
+const custList = params => {
+	let options = {
+		url: '/home/cust/index',
+		data: params,
+	};
+	return requestAction(options)
+}
+
+// 销售排名  /home/report/gettopsalelist
+const gettopsalelist = params => {
+	let options = {
+		url: '/home/report/gettopsalelist',
+		data: params,
+	};
+	return requestAction(options)
+}
+
+// costdown分析 
+const getcostdownlist = params => {
+	let options = {
+		url: '/home/report/getcostdownlist',
+		data: params,
+	};
+	return requestAction(options)
+}
+
+//  
+const getstocktrendlist = params => {
+	let options = {
+		url: '/home/report/getstocktrendlist',
+		data: params,
+	};
+	return requestAction(options)
+}
+
+
+// getoverdatelist  
+const getoverdatelist = params => {
+	let options = {
+		url: '/home/report/getoverdatelist',
 		data: params,
 	};
 	return requestAction(options)
@@ -154,5 +266,17 @@ export default {
 	getngstocklist,
 	getrec,
 	getprice,
-	getoverdate
+	getoverdate,
+	getbillitemlist,
+	getreclist,
+	getpricelist,
+	getowelist,
+	nowToStock,
+	getmrpitemlist,
+	getcustprofitlist,
+	custList,
+	gettopsalelist,
+	getcostdownlist,
+	getstocktrendlist,
+	getoverdatelist
 }

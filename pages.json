@@ -56,6 +56,19 @@
 				"navigationBarTitleText": ""
 			}
 		}
+		, {
+			"path": "pages/sale/indexOrder",
+			"style": {
+				"navigationBarTitleText": "接单"
+			}
+		}, {
+			"path": "pages/stock/indexStock",
+			"style": {
+				"navigationBarTitleText": "库存"
+			}
+		}
+
+
 		
 		// 销售 三模块
 		, {

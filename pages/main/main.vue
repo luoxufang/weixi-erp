@@ -7,13 +7,14 @@
 				<view v-for="(fitem, index) in flist" :key="fitem.id" class="f-item b-b" :class="{ active: fitem.id === currentId }" @click="tabtap(fitem, index)">{{ fitem.label }}</view>
 			</view>
 			<view class="right-view" @click="navTo(`/pages/table/table`)">
-				<view class="" v-if="currentType=='Receipt'">
+				<view class="" v-if="currentType=='Receipt'" 
+				@click.stop="navTo(`/pages/sale/indexOrder?todayamount=`+getorderData.todayamount+'&last5amount='+getorderData.last5amount+'&lastmonthamount='+getorderData.lastmonthamount)">
 					<view class="boss">BOSS:</view>
 					<view class="notice">恭喜你今天又接了{{getorderData.todayamount}}元订单</view>
-					<view class="notice">近五日接了{{getorderData.todayamount}}元订单</view>
-					<view class="notice">近一个月接了{{getorderData.todayamount}}元订单</view>
+					<view class="notice">近五日接了{{getorderData.last5amount}}元订单</view>
+					<view class="notice">近一个月接了{{getorderData.lastmonthamount}}元订单</view>
 				</view>
-				<view class="" v-if="currentType=='Stock'">
+				<view class="" v-if="currentType=='Stock'" @click.stop="navTo('/pages/stock/indexStock?todayamount='+getngstockData.last30amount+'&last5amount='+getngstockData.last60amount+'&lastmonthamount='+getngstockData.last90amount)">
 					<view class="boss">BOSS:</view>
 					<view class="notice">公司久滞库存30天以上{{getngstockData.last30amount}}元</view>
 					<view class="notice">60天以上{{getngstockData.last60amount}}元</view>
@@ -26,22 +27,22 @@
 				</view>
 				<view class="" v-if="currentType=='Price'">
 					<view class="boss">BOSS:</view>
-					<view class="notice">你的价格波动超过5%的有0条</view>
+					<view class="notice">你的价格最大波动率为{{priceData.totalcount}}%</view>
 					<view class="notice">请点开核实一下呀！</view>
 				</view>
 				<view class="" v-if="currentType=='Delivery'">
 					<view class="boss">BOSS:</view>
-					<view class="notice">你的超过交期的销售订单是0.00元</view>
-					<view class="notice">超过交期的采购订单0.00元</view>
+					<view class="notice">你的超过交期的销售订单是{{deliveryData.totalsalecount}}元</view>
+					<view class="notice">超过交期的采购订单{{deliveryData.totalpurcount}}元</view>
 					<view class="notice">是否忘记出入库还是真的超交期？</view>
 				</view>
 				<view class="" v-if="currentType=='Produce'">
 					<view class="boss">BOSS:</view>
-					<view class="notice">你的超过交期的生产订单有0条</view>
+					<view class="notice">你的超过交期的生产订单有{{deliveryData.totalworkcount}}条</view>
 					<view class="notice">是否忘记入库还是真的超交期？</view>
 				</view>
 
-				<view class="select-company"  @click.stop="toggleSpec()">
+				<view class="select-company" @click.stop="toggleSpec()">
 					<view class="flex-box">
 						{{shopname}}
 					</view>
@@ -164,6 +165,14 @@
 					payamount:'0',
 					recamount:'0',
 				},
+				priceData:{
+					totalcount:'0',
+				},
+				deliveryData:{
+					totalpurcount:'0',
+					totalsalecount:'0',
+					totalworkcount:'0',
+				},
 				flist: [ // 今日播报，菜单选项
 					{ id:1, label: '接单', loaded: false },
 					{ id:2, label: '库存', loaded: false },
@@ -192,7 +201,7 @@
 						url: '', // 如果有二级nav菜单,url为空；否则填写跳转页面
 						child: [
 							{ name: '采购订单', url: '/pages/purchase/order' },
-							{ name: '采购入库', url: '/pages/purchase/laiup' },
+							{ name: '采购入库', url: '/pages/purchase/laidup' },
 							{ name: '应收账款', url: '/pages/purchase/bill' },
 						]
 					},
@@ -281,7 +290,7 @@
 				shopname: ''
 			}
 		},
-		computed: { 
+		computed: {
 			...mapState(['forcedLogin', 'hasLogin', 'userName'])
 		},
 		onShow(){
@@ -352,6 +361,7 @@
 					this.$api.msg(result.erroinfo);
 					this.flist[this.currentId-1].loaded = true
 					// console.log(result.data)
+					// util.convertDigital(parseFloat(result.data.todayamount))
 					this.getorderData.todayamount = result.data.todayamount
 					this.getorderData.last5amount = result.data.last5amount
 					this.getorderData.lastmonthamount = result.data.lastmonthamount
@@ -371,9 +381,9 @@
 					this.flist[this.currentId-1].loaded = true
 					// console.log(result.data)
 					console.log(parseFloat(result.data.last30amount))
-					this.getngstockData.last30amount = util.convertDigital(parseFloat(result.data.last30amount))
-					this.getngstockData.last60amount = util.convertDigital(parseFloat(result.data.last60amount))
-					this.getngstockData.last90amount = util.convertDigital(parseFloat(result.data.last90amount))
+					this.getngstockData.last30amount = result.data.last30amount?parseFloat(result.data.last30amount).toFixed(2):'0'
+					this.getngstockData.last60amount = result.data.last60amount?parseFloat(result.data.last60amount).toFixed(2):'0'
+					this.getngstockData.last90amount = result.data.last90amount?parseFloat(result.data.last90amount).toFixed(2):'0'
 				} else {
 					this.$api.msg(result.erroinfo);
 				}
@@ -388,8 +398,8 @@
 				if (result.ret === 1) {
 					this.flist[this.currentId-1].loaded = true
 					// console.log(result.data)
-					this.getrecData.payamount = util.convertDigital(parseFloat(result.data.payamount))
-					this.getrecData.recamount = util.convertDigital(parseFloat(result.data.recamount))
+					this.getrecData.payamount = result.data.payamount?parseFloat(result.data.payamount).toFixed(2):'0'
+					this.getrecData.recamount = result.data.recamount?parseFloat(result.data.recamount).toFixed(2):'0'
 				} else {
 					this.$api.msg(result.erroinfo);
 				}
@@ -403,7 +413,8 @@
 				console.log(result,'价格')
 				if (result.ret === 1) {
 					this.flist[this.currentId-1].loaded = true
-					console.log(result.data)
+					this.priceData.totalcount = result.data.result[0].totalcount?parseFloat(result.data.result[0].totalcount).toFixed(2):'0'
+					// util.round(parseFloat(result.data.result[0].totalcount), result.data.result[0].totalcount.split('.')[1].length)
 				} else {
 					this.$api.msg(result.erroinfo);
 				}
@@ -417,7 +428,9 @@
 				console.log(result,'交期')
 				if (result.ret === 1) {
 					this.flist[this.currentId-1].loaded = true
-					console.log(result.data)
+					this.deliveryData.totalpurcount = result.data.totalpurcount
+					this.deliveryData.totalsalecount = result.data.totalsalecount
+					this.deliveryData.totalworkcount = result.data.totalworkcount
 				} else {
 					this.$api.msg(result.erroinfo);
 				}

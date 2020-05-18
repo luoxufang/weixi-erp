@@ -63,40 +63,20 @@ export default {
 			SaleOrderColumns: [
 				{
 					title: "供应商名称",
-					key: "name",
+					key: "custname",
 					width: 200
 				}, {
 					title: "应收金额",
-					key: "price",
+					key: "num_10",
 					width: 530
 				}
 			],
 			
 			SaleOrderTableData: [
-				{
-					name: "张三",
-					price: '99999.99'
-				},
-				{
-					name: "李四",
-					price: '99999.99'
-				},
-				{
-					name: "王五",
-					price: '99999.99'
-				},
-				{
-					name: "张大嘛",
-					price: '99999.99'
-				},
-				{
-					name: "张三",
-					price: '99999.99'
-				},
-				{
-					name: "张三",
-					price: '99999.99'
-				},
+				// {
+				// 	name: "张三",
+				// 	price: '99999.99'
+				// }
 			],
 
     }
@@ -119,11 +99,35 @@ export default {
 		this.endDate = today
 		console.log(options)
 		this.tableType = options.type
-		
+		this.getowelist(today,today)
 	},
   methods:{
+		async getowelist(startdate,enddate){
+			var that = this
+			const result = await that.$api.interfaceApi('getowelist')({
+				token: uni.getStorageSync('token'),
+				shopid: uni.getStorageSync('shopid'),
+				startdate: startdate,
+				enddate: enddate,
+				keyword: '',
+				usertype:'2', // 1应收 2应付
+			});
+			if (result.ret === 1) {
+				if(result.data.result.length>0){
+					that.$api.msg(result.erroinfo);
+					that.SaleOrderTableData = result.data.result
+				}else{
+					that.SaleOrderTableData = []
+					that.$api.msg('暂未无数据');
+				}
+			} else {
+				that.$api.msg(result.erroinfo);
+			}
+	  },
     search(e){
-			console.log(e)
+			console.log(this.keyword)
+			if(!this.keyword) return
+			this.getowelist()
 		},
 		input(e){
 			// console.log(e)
@@ -142,15 +146,18 @@ export default {
         var time2=new Date(e.range.after);
         if(time2>time1){
           this.startDate = e.range.before
-          this.endDate = e.range.after
+					this.endDate = e.range.after
+					this.getowelist(e.range.before,e.range.after)
         }else{
           this.startDate = e.range.after
-          this.endDate = e.range.before
+					this.endDate = e.range.before
+					this.getowelist(e.range.after,e.range.before)
         }
         
       } else {
         this.startDate = e.fulldate
-        this.endDate = e.fulldate
+				this.endDate = e.fulldate
+				this.getowelist(e.fulldate,e.fulldate)
       }
 		}
   }

@@ -104,81 +104,45 @@ export default {
 			SaleOrderColumns: [
 				{
 					title: "客户名称",
-					key: "name",
+					key: "custname",
 					width: 150
 				}, {
 					title: "客户代码",
-					key: "peopleCode",
-					width: 200
+					key: "custcode",
+					width: 280
 				}, {
 					title: "销售数量",
-					key: "saleNumber",
+					key: "totalcount",
 					width: 180
 				}, {
 					title: "销售金额",
-					key: "saleMoney",
+					key: "totalamount",
 					width: 180
 				}, {
 					title: "BOM成本",
-					key: "bom",
+					key: "totalcost",
 					width: 200
 				}, {
 					title: "毛利",
-					key: "maoli",
+					key: "totalprofit",
 					width: 180
 				}, {
 					title: "毛利率",
-					key: "maolilv",
+					key: "totalprofit",
 					width: 180
 				}
 			],
 			
 			SaleOrderTableData: [
-				{
-					name: "李青云",
-          peopleCode: '123456789',
-          saleNumber: '9999',
-          saleMoney: '9999.99',
-          bom: '888.88',
-          maoli: '9999.99',
-          maolilv: '9999.99',
-				},
-				{
-					name: "李青云",
-          peopleCode: '123456789',
-          saleNumber: '9999',
-          saleMoney: '9999.99',
-          bom: '888.88',
-          maoli: '9999.99',
-          maolilv: '9999.99',
-        },
-        {
-					name: "李青云",
-          peopleCode: '123456789',
-          saleNumber: '9999',
-          saleMoney: '9999.99',
-          bom: '888.88',
-          maoli: '9999.99',
-          maolilv: '9999.99',
-        },
-        {
-					name: "李青云",
-          peopleCode: '123456789',
-          saleNumber: '9999',
-          saleMoney: '9999.99',
-          bom: '888.88',
-          maoli: '9999.99',
-          maolilv: '9999.99',
-        },
-        {
-					name: "李青云",
-          peopleCode: '123456789',
-          saleNumber: '9999',
-          saleMoney: '9999.99',
-          bom: '888.88',
-          maoli: '9999.99',
-          maolilv: '9999.99',
-				},
+				// {
+				// 	name: "李青云",
+        //   peopleCode: '123456789',
+        //   saleNumber: '9999',
+        //   saleMoney: '9999.99',
+        //   bom: '888.88',
+        //   maoli: '9999.99',
+        //   maolilv: '9999.99',
+				// }
 			],
 
     }
@@ -201,9 +165,61 @@ export default {
 		this.endDate = today
 		console.log(today)
 		this.tableType = options.type
-		
+    // 初始table
+    this.getcustprofitlist(today,today)
+    // 获取客户列表
+    this.custList()
 	},
   methods:{
+    async getcustprofitlist(startdate,enddate){
+			var that = this
+			const result = await that.$api.interfaceApi('getcustprofitlist')({
+				token: uni.getStorageSync('token'),
+				shopid: uni.getStorageSync('shopid'),
+				startdate: startdate,
+				enddate: enddate,
+				keyword: '',
+				billtype:'11', // 11销售订单 12采购订单
+			});
+			if (result.ret === 1) {
+				
+				if(result.data.result.length>0){
+					that.$api.msg(result.erroinfo);
+          that.SaleOrderTableData = result.data.result
+
+          // var aaa = result.data.result.map(()=>{
+          //   item.
+          //   return item
+          // })
+
+				}else{
+					that.SaleOrderTableData = []
+					that.$api.msg('暂未无数据');
+				}
+			} else {
+				that.$api.msg(result.erroinfo);
+			}
+    },
+    async custList(){
+      const result = await this.$api.interfaceApi('custList')({
+				token: uni.getStorageSync('token'),
+				shopid: uni.getStorageSync('shopid'),
+        keyword: '',
+        usertype: '1',
+      });
+      
+      if (result.ret === 1) {
+				if(result.data.result.length>0){
+					that.$api.msg(result.erroinfo);
+					that.custList = result.data.result
+				}else{
+					that.custList = []
+					that.$api.msg('暂未无数据');
+				}
+			} else {
+				that.$api.msg(result.erroinfo);
+			}
+    },
     search(e){
 			console.log(e)
 		},

@@ -4,6 +4,15 @@
 			<view v-for="(item, index) in navList" :key="index" class="nav-item" :class="{ current: tabCurrentIndex === index }" @click="tabClick(index)">{{ item.text }}</view>
 		</view>
 
+    <view class="data-box" @click="open">
+      <text style="font-size:28upx;">选择时间</text>
+			<view class="firstTime">{{startDate}}</view>
+			<image class="image" src="/static/xiala.png" />
+			<text>到</text>
+			<view class="endTime">{{endDate}}</view>
+			<image class="image" src="/static/xiala.png" />
+		</view>
+
     <swiper :current="tabCurrentIndex" class="swiper-box" duration="300" @change="changeTab">
 			<swiper-item class="tab-content" v-for="(tabItem, tabIndex) in navList" :key="tabIndex">
 				<scroll-view class="list-scroll-content" scroll-y>
@@ -73,9 +82,6 @@
 					<!-- 数据列表 -->
 					<view v-for="(item, index) in tabItem.rankList" :key="index" class="order-item">
 
-						
-          
-
 					</view>
 
 					<!-- <uni-load-more :status="tabItem.loadingType"></uni-load-more> -->
@@ -83,20 +89,43 @@
 			</swiper-item>
 		</swiper>
 
+    <uni-calendar ref="calendar" 
+		:date="info.date" 
+		:insert="info.insert" 
+		:lunar="info.lunar" 
+		:startDate="info.startDate" 
+		:endDate="info.endDate" 
+		:range="info.range" 
+		@confirm="confirm" />
 
   </view>
 </template>
 <script>
 import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 import empty from '@/components/empty/empty.vue';
+import uniCalendar from '@/components/uni-calendar/uni-calendar.vue'
 export default {
   components:{
     uniLoadMore,
-    empty
+    empty,
+    uniCalendar
   },
   data() {
     return {
+      startDate: '',
+			endDate: '',
+			showCalendar: false,
+      info: {
+				date: '',
+				startDate: '2019-06-15',
+				endDate: '2019-010-15',
+				lunar: true,
+				range: false,
+				insert: false,
+				selected: []
+			},
       tabCurrentIndex: 0,
+      dataList:[],
       navList: [
 				{
 					state: 0,
@@ -119,7 +148,73 @@ export default {
 			]
     }
   },
+  onLoad(){
+    //今天的时间
+		let day2 = new Date();
+		if(day2.getMonth()+1<10){
+			var Month = '0'+(day2.getMonth()+1)
+		}else{
+      var Month = (day2.getMonth()+1)
+    }
+		if(day2.getDate()<10){
+			var date = '0'+day2.getDate()
+		}else{
+      var date = day2.getDate()
+    }
+		var today = day2.getFullYear()+"-" + Month + "-" + date;
+		this.startDate = today
+		this.endDate = today
+    
+    this.gettopsalelist(today,today)
+  },
+  open() {
+    this.$refs.calendar.open()
+  },
   methods: {
+    // gettopsalelist
+    async gettopsalelist(startdate,enddate){
+      const result = await this.$api.interfaceApi('gettopsalelist')({
+				token: uni.getStorageSync('token'),
+        shopid: uni.getStorageSync('shopid'),
+        startdate: startdate,
+        enddate: enddate,
+        keyword: '',
+        toptype: '1',//1业务员 2客户 3部门
+      });
+      
+      if (result.ret === 1) {
+				if(result.data.result.length>0){
+					this.$api.msg(result.erroinfo);
+					this.dataList = result.data.result
+				}else{
+					this.custList = []
+					this.$api.msg('暂无数据');
+				}
+			} else {
+				this.$api.msg(result.erroinfo);
+			}
+    },
+		confirm(e){
+			console.log(e)
+			if(e.range.before && e.range.after){
+        var time1=new Date(e.range.before);
+        var time2=new Date(e.range.after);
+        if(time2>time1){
+          this.startDate = e.range.before
+          this.endDate = e.range.after
+          this.getTableData(e.range.before,e.range.after)
+        }else{
+          this.startDate = e.range.after
+          this.endDate = e.range.before
+          this.getTableData(e.range.after,e.range.before)
+        }
+        
+      } else {
+        this.startDate = e.fulldate
+        this.endDate = e.fulldate
+        this.getTableData(e.fulldate,e.fulldate)
+      }
+		},
     //swiper 切换
     changeTab(e) {
       this.tabCurrentIndex = e.target.current;
@@ -195,6 +290,21 @@ export default {
       }
     }
   }
+}
+
+.data-box{
+	display: flex;
+	align-items: center;
+	padding: 0 20upx;
+	font-size: 28upx;
+	margin-bottom: 20upx;
+	text{
+		margin: 0 20upx;
+	}
+	.image{
+		width: 28upx;
+		height: 28upx;
+	}
 }
 .rank-list{
   font-size: 30upx;

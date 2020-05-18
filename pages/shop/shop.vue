@@ -5,7 +5,7 @@
     </view>
 
     <view class="tuichu-btn-box">
-      <view class="tuichu-btn">退出登录</view>
+      <view class="tuichu-btn" @click="loginout()">退出登录</view>
     </view>
     
 	</view>
@@ -52,7 +52,25 @@
         }, 500);
 				
 			}
-		}
+    },
+    loginout(){
+      let that = this;
+      uni.showModal({
+        content: '确定退出登录？',
+        success: function (res) {
+          if (res.confirm) {
+            uni.setStorageSync('token', '');
+            uni.setStorageSync('shopid', '');
+            uni.redirectTo({
+              url:'/pages/public/login'
+            });
+          } else if (res.cancel) {
+            console.log('用户点击取消');
+          }
+        }
+      });
+      
+    },
 	}
 </script>
 

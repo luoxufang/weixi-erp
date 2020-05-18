@@ -53,7 +53,7 @@ export default {
 			info: {
 				date: '',
 				startDate: '2019-06-15',
-				endDate: '2019-010-15',
+				endDate: '2019-10-15',
 				lunar: true,
 				range: true,
 				insert: false,
@@ -64,96 +64,55 @@ export default {
 
 			SaleOrderColumns: [{
 				title: "客户名称",
-				key: "name",
+				key: "custname",
 				width: 150
 			}, {
 				title: "订单号",
-				key: "orderNum",
+				key: "custbillcode",
 				width: 200
 			}, {
 				title: "日期",
-				key: "data",
+				key: "billdate",
 				width: 200
 			}, {
 				title: "料号",
-				key: "wucode",
+				key: "prodno",
 				width: 200
 			}, {
 				title: "品名",
-				key: "shopname",
+				key: "prodname",
 				width: 200
 			}, {
 				title: "数量",
-				key: "number",
+				key: "prodcount",
 				width: 100
 			}, {
 				title: "单位",
-				key: "sale",
+				key: "produnitname",
 				width: 120
 			}, {
 				title: "单价",
-				key: "price",
+				key: "prodprice",
 				width: 200
 			}, {
 				title: "金额",
-				key: "proMoney",
+				key: "amounttax",
 				width: 200
 			}],
 			
-			SaleOrderTableData: [{
-				name: "张三",
-				orderNum: '12345678',
-				data: "2020-04-28",
-				wucode: "123456",
-				shopname: '华为手机p30',
-				number: "999",
-				sale: "件",
-				price: "99.99",
-				proMoney: "2000.00"
-			}, {
-				name: "张三",
-				orderNum: '12345678',
-				data: "2020-04-28",
-				wucode: "123456",
-				shopname: '华为手机p30',
-				number: "999",
-				sale: "件",
-				price: "99.99",
-				proMoney: "2000.00"
-			},
-			{
-				name: "张三",
-				orderNum: '12345678',
-				data: "2020-04-28",
-				wucode: "123456",
-				shopname: '华为手机p30',
-				number: "999",
-				sale: "件",
-				price: "99.99",
-				proMoney: "2000.00"
-			},
-			{
-				name: "张三",
-				orderNum: '12345678',
-				data: "2020-04-28",
-				wucode: "123456",
-				shopname: '华为手机p30',
-				number: "999",
-				sale: "件",
-				price: "99.99",
-				proMoney: "2000.00"
-			},
-			{
-				name: "张三",
-				orderNum: '12345678',
-				data: "2020-04-28",
-				wucode: "123456",
-				shopname: '华为手机p30',
-				number: "999",
-				sale: "件",
-				price: "99.99",
-				proMoney: "2000.00"
-			}],
+			SaleOrderTableData: [
+				// {
+				// 	custname: "张三",
+				// 	custbillcode: '12345678',
+				// 	billdate: "2020-04-28",
+				// 	prodno: "123456",
+				// 	prodname: '华为手机p30',
+				// 	count: "999",
+				// 	prodshowunitname: "件",
+				// 	num_10: "99.99",
+				// 	amounttax: "2000.00"
+				// }
+			],
 
     }
   },
@@ -175,32 +134,43 @@ export default {
 		this.endDate = today
 		console.log(options)
 		this.tableType = options.type
-		this.getTableData(today,today)
+		setTimeout(()=>{
+			this.getTableData(today,today)
+		},300)
 		
 	},
   methods:{
 		async getTableData(startdate,enddate){
-			const result = await this.$api.interfaceApi('getorderlist')({
+			var that = this
+			const result = await that.$api.interfaceApi('getorderlist')({
 				token: uni.getStorageSync('token'),
 				shopid: uni.getStorageSync('shopid'),
 				startdate: startdate,
-				enddate: enddate?enddate:'',
+				enddate: enddate,
 				keyword: '',
 				billtype:'11', // 11销售订单 12采购订单
 			});
-			console.log(result)
 			if (result.ret === 1) {
-					this.$api.msg(result.erroinfo);
-					console.log(result.data)
-				} else {
-					this.$api.msg(result.erroinfo);
+				
+				if(result.data.result.length>0){
+					that.$api.msg(result.erroinfo);
+					that.SaleOrderTableData = result.data.result
+				}else{
+					that.SaleOrderTableData = []
+					that.$api.msg('暂未无数据');
 				}
-		},
+			} else {
+				that.$api.msg(result.erroinfo);
+			}
+	  },
     search(e){
-			console.log(e)
+			console.log(this.keyword)
+			if(!this.keyword) return
+			this.getTableData()
 		},
 		input(e){
-			// console.log(e)
+			// console.log(e.value)
+			this.keyword = e.value
 		},
 		changeData(type){
 			this.timeType = type

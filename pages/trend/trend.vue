@@ -1,5 +1,15 @@
 <template>
 	<view class="qiun-columns">
+		<view class="data-box" @click="open">
+      <text style="font-size:28upx;">选择时间</text>
+			<view class="firstTime">{{startDate}}</view>
+			<image class="image" src="/static/xiala.png" />
+			<text>到</text>
+			<view class="endTime">{{endDate}}</view>
+			<image class="image" src="/static/xiala.png" />
+		</view>
+
+
 		<view class="qiun-bg-white qiun-title-bar qiun-common-mt" >
 			<view class="qiun-title-dot-light" style="padding-left:20upx;">基本折线图</view>
 		</view>
@@ -19,6 +29,7 @@
 				cWidth:'',
 				cHeight:'',
 				pixelRatio:1,
+				dataList:''
 			}
 		},
 		onLoad() {
@@ -26,8 +37,33 @@
 			this.cWidth=uni.upx2px(750);
 			this.cHeight=uni.upx2px(500);
 			this.getServerData();
+
+			// 趋势区间
+			this.getstocktrendlist()
 		},
 		methods: {
+    async getstocktrendlist(startdate,enddate){
+      const result = await this.$api.interfaceApi('getstocktrendlist')({
+				token: uni.getStorageSync('token'),
+        shopid: uni.getStorageSync('shopid'),
+        startdate: startdate,
+        enddate: '2020-05-17',
+				keyword: '',
+				stocktype: '1'
+      });
+      
+      if (result.ret === 1) {
+				if(result.data.result.length>0){
+					this.$api.msg(result.erroinfo);
+					this.dataList = result.data.result
+				}else{
+					this.dataList = []
+					this.$api.msg('暂无数据');
+				}
+			} else {
+				this.$api.msg(result.erroinfo);
+			}
+    },
 			getServerData(){
 				uni.request({
 					url: 'https://www.ucharts.cn/data.json',
@@ -96,7 +132,7 @@
 	}
 </script>
 
-<style>
+<style lang='scss'>
 	/*样式的width和height一定要与定义的cWidth和cHeight相对应*/
 	.qiun-charts {
 		width: 750upx;
@@ -109,4 +145,20 @@
 		height: 500upx;
 		background-color: #FFFFFF;
 	}
+	.data-box{
+	display: flex;
+	align-items: center;
+	padding: 0 20upx;
+	font-size: 28upx;
+	margin-bottom: 20upx;
+	text{
+		margin: 0 20upx;
+	}
+	.image{
+		width: 28upx;
+		height: 28upx;
+	}
+}
+
+	
 </style>

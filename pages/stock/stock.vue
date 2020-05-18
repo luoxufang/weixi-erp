@@ -64,48 +64,31 @@ export default {
 			SaleOrderColumns: [
 				{
 					title: "料号",
-					key: "wucode",
-					width: 150
+					key: "prodno",
+					width: 200
 				}, {
 					title: "品名规格",
-					key: "shopsku",
+					key: "skuvalfull",
 					width: 320
 				}, {
 					title: "库存数量",
-					key: "stocknumber",
-					width: 180
-				}, {
-					title: "在途数量",
-					key: "ingnumber",
-					width: 180
+					key: "curstock",
+					width: 200
 				}
+				// , {
+				// 	title: "在途数量",
+				// 	key: "prodcount",
+				// 	width: 180
+				// }
 			],
 			
 			SaleOrderTableData: [
-				{
-					wucode: "123456",
-          shopsku: '伊利纯正牛奶奥运品质全新升级',
-          stocknumber: '4555',
-          ingnumber: '4555',
-				},
-				{
-					wucode: "123456",
-          shopsku: '伊利纯正牛奶奥运品质全新升级',
-          stocknumber: '4555',
-          ingnumber: '4555',
-        },
-        {
-					wucode: "123456",
-          shopsku: '伊利纯正牛奶奥运品质全新升级',
-          stocknumber: '4555',
-          ingnumber: '4555',
-        },
-        {
-					wucode: "123456",
-          shopsku: '伊利纯正牛奶奥运品质全新升级',
-          stocknumber: '4555',
-          ingnumber: '4555',
-				},
+				// {
+				// 	wucode: "123456",
+        //   shopsku: '伊利纯正牛奶奥运品质全新升级',
+        //   stocknumber: '4555',
+        //   ingnumber: '4555',
+				// }
 			],
 
     }
@@ -128,9 +111,37 @@ export default {
 		this.endDate = today
 		console.log(options)
 		this.tableType = options.type
-		
+		this.nowToStock(today,today)
 	},
   methods:{
+		async nowToStock(startdate,enddate){
+			var that = this
+			const result = await that.$api.interfaceApi('nowToStock')({
+				token: uni.getStorageSync('token'),
+				shopid: uni.getStorageSync('shopid'),
+				startdate: startdate,
+				enddate: enddate,
+				keyword: '',
+				billtype:'1',
+				condition: ''
+			});
+			if (result.ret === 1) {
+				
+				if(result.data.res_prodshop.length>0){
+					that.$api.msg(result.erroinfo);
+					var dddd = result.data.res_prodshop.map((item)=>{
+						item.skuvalfull = item.prodname+' '+item.skuvalfull
+						return item
+					})
+					that.SaleOrderTableData = dddd
+				}else{
+					that.SaleOrderTableData = []
+					that.$api.msg('暂未无数据');
+				}
+			} else {
+				that.$api.msg(result.erroinfo);
+			}
+	  },
     search(e){
 			console.log(e)
 		},

@@ -68,23 +68,23 @@ export default {
 				width: 150
 			}, {
 				title: "生产订单号",
-				key: "proorder",
+				key: "custbillcode",
 				width: 200
 			}, {
 				title: "日期",
-				key: "data",
+				key: "updatedate",
 				width: 200
 			}, {
 				title: "料号",
-				key: "wucode",
+				key: "prodno",
 				width: 200
 			}, {
 				title: "品名规格",
-				key: "shopname",
+				key: "skuvalfull",
 				width: 200
 			}, {
 				title: "计划数量",
-				key: "number",
+				key: "prodcount",
 				width: 150
 			}, {
 				title: "加工单价",
@@ -92,7 +92,7 @@ export default {
 				width: 150
 			}, {
 				title: "完工数量",
-				key: "isnumber",
+				key: "finishcount",
 				width: 150
 			}, {
 				title: "未完工数量",
@@ -100,58 +100,24 @@ export default {
 				width: 180
 			}, {
 				title: "预计完工时间",
-				key: "time",
+				key: "finishdate",
 				width: 200
 			}],
 			
-			SaleOrderTableData: [{
-        people: '李小萌',
-				proorder: "123456",
-				data: '3月30号',
-				wucode: "12345678",
-				shopname: '华为手机p30',
-        number: "999",
-        sub_price: "666.6",
-				isnumber: "566",
-				nonumber: "8888",
-				time: "5月1日"
-			},
-			{
-        people: '李小萌',
-				proorder: "123456",
-				data: '3月30号',
-				wucode: "12345678",
-				shopname: '华为手机p30',
-        number: "999",
-        sub_price: "666.6",
-				isnumber: "566",
-				nonumber: "8888",
-				time: "5月1日"
-			},
-			{
-        people: '李小萌',
-				proorder: "123456",
-				data: '3月30号',
-				wucode: "12345678",
-				shopname: '华为手机p30',
-        number: "999",
-        sub_price: "666.6",
-				isnumber: "566",
-				nonumber: "8888",
-				time: "5月1日"
-			},
-			{
-        people: '李小萌',
-				proorder: "123456",
-				data: '3月30号',
-				wucode: "12345678",
-				shopname: '华为手机p30',
-        number: "999",
-        sub_price: "666.6",
-				isnumber: "566",
-				nonumber: "8888",
-				time: "5月1日"
-			}],
+			SaleOrderTableData: [
+				// {
+				// 	people: '李小萌',
+				// 	proorder: "123456",
+				// 	data: '3月30号',
+				// 	wucode: "12345678",
+				// 	shopname: '华为手机p30',
+				// 	number: "999",
+				// 	sub_price: "666.6",
+				// 	isnumber: "566",
+				// 	nonumber: "8888",
+				// 	time: "5月1日"
+				// }
+			],
 
     }
   },
@@ -174,10 +140,42 @@ export default {
 		console.log(options)
 		this.tableType = options.type
 		
+		this.getmrpitemlist(today,today)
 	},
   methods:{
+		async getmrpitemlist(startdate,enddate){
+			var that = this
+			const result = await that.$api.interfaceApi('getmrpitemlist')({
+				token: uni.getStorageSync('token'),
+				shopid: uni.getStorageSync('shopid'),
+				startdate: startdate,
+				enddate: enddate,
+				keyword: '',
+				plantype:'2', // 1自制 2 外
+			});
+			if (result.ret === 1) {
+				if(result.data.result.length>0){
+					that.$api.msg(result.erroinfo);
+					var aaa = result.data.result.map((item)=>{
+						item.skuvalfull = item.prodname+' '+item.skuvalfull;
+						item.nonumber = (parseFloat(item.prodcount) - parseFloat(item.finishcount))
+
+						return item
+					})
+					
+					that.SaleOrderTableData = aaa
+				}else{
+					that.SaleOrderTableData = []
+					that.$api.msg('暂未无数据');
+				}
+			} else {
+				that.$api.msg(result.erroinfo);
+			}
+	  },
     search(e){
-			console.log(e)
+			console.log(this.keyword)
+			if(!this.keyword) return
+			this.getmrpitemlist()
 		},
 		input(e){
 			// console.log(e)
@@ -196,15 +194,18 @@ export default {
         var time2=new Date(e.range.after);
         if(time2>time1){
           this.startDate = e.range.before
-          this.endDate = e.range.after
+					this.endDate = e.range.after
+					this.getmrpitemlist(e.range.before,e.range.after)
         }else{
           this.startDate = e.range.after
-          this.endDate = e.range.before
+					this.endDate = e.range.before
+					this.getmrpitemlist(e.range.after,e.range.before)
         }
         
       } else {
         this.startDate = e.fulldate
-        this.endDate = e.fulldate
+				this.endDate = e.fulldate
+				this.getmrpitemlist(e.fulldate,e.fulldate)
       }
 		}
   }
