@@ -7,36 +7,36 @@
 				<view v-for="(fitem, index) in flist" :key="fitem.id" class="f-item b-b" :class="{ active: fitem.id === currentId }" @click="tabtap(fitem, index)">{{ fitem.label }}</view>
 			</view>
 			<view class="right-view" @click="navTo(`/pages/table/table`)">
-				<view class="" v-if="currentType=='Receipt'" 
-				@click.stop="navTo(`/pages/sale/indexOrder?todayamount=`+getorderData.todayamount+'&last5amount='+getorderData.last5amount+'&lastmonthamount='+getorderData.lastmonthamount)">
+				<view class="news-box" v-if="currentType=='Receipt'" 
+				@click.stop="navTo2(`/pages/sale/indexOrder?todayamount=`+getorderData.todayamount+'&last5amount='+getorderData.last5amount+'&lastmonthamount='+getorderData.lastmonthamount)">
 					<view class="boss">BOSS:</view>
 					<view class="notice">恭喜你今天又接了{{getorderData.todayamount}}元订单</view>
 					<view class="notice">近五日接了{{getorderData.last5amount}}元订单</view>
 					<view class="notice">近一个月接了{{getorderData.lastmonthamount}}元订单</view>
 				</view>
-				<view class="" v-if="currentType=='Stock'" @click.stop="navTo('/pages/stock/indexStock?todayamount='+getngstockData.last30amount+'&last5amount='+getngstockData.last60amount+'&lastmonthamount='+getngstockData.last90amount)">
+				<view class="news-box" v-if="currentType=='Stock'" @click.stop="navTo2('/pages/stock/indexStock?todayamount='+getngstockData.last30amount+'&last5amount='+getngstockData.last60amount+'&lastmonthamount='+getngstockData.last90amount)">
 					<view class="boss">BOSS:</view>
 					<view class="notice">公司久滞库存30天以上{{getngstockData.last30amount}}元</view>
 					<view class="notice">60天以上{{getngstockData.last60amount}}元</view>
 					<view class="notice">90天以上{{getngstockData.last90amount}}元</view>
 				</view>
-				<view class="" v-if="currentType=='Money'">
+				<view class="news-box" v-if="currentType=='Money'" @click.stop="navTo2('/pages/main/receipt?payamount='+getrecData.payamount+'&recamount='+getrecData.recamount)">
 					<view class="boss">BOSS:</view>
 					<view class="notice">你的过期应收款是{{getrecData.payamount}}元</view>
 					<view class="notice">逾期付款{{getrecData.recamount}}元</view>
 				</view>
-				<view class="" v-if="currentType=='Price'">
+				<view class="news-box" v-if="currentType=='Price'" @click.stop="navTo2('/pages/main/priceList?totalcount='+priceData.totalcount)">
 					<view class="boss">BOSS:</view>
 					<view class="notice">你的价格最大波动率为{{priceData.totalcount}}%</view>
 					<view class="notice">请点开核实一下呀！</view>
 				</view>
-				<view class="" v-if="currentType=='Delivery'">
+				<view class="news-box" v-if="currentType=='Delivery'" @click.stop="navTo2('/pages/main/delivery?totalsalecount='+deliveryData.totalsalecount+'&totalpurcount='+deliveryData.totalpurcount)">
 					<view class="boss">BOSS:</view>
 					<view class="notice">你的超过交期的销售订单是{{deliveryData.totalsalecount}}元</view>
 					<view class="notice">超过交期的采购订单{{deliveryData.totalpurcount}}元</view>
 					<view class="notice">是否忘记出入库还是真的超交期？</view>
 				</view>
-				<view class="" v-if="currentType=='Produce'">
+				<view class="news-box" v-if="currentType=='Produce'">
 					<view class="boss">BOSS:</view>
 					<view class="notice">你的超过交期的生产订单有{{deliveryData.totalworkcount}}条</view>
 					<view class="notice">是否忘记入库还是真的超交期？</view>
@@ -428,9 +428,9 @@
 				console.log(result,'交期')
 				if (result.ret === 1) {
 					this.flist[this.currentId-1].loaded = true
-					this.deliveryData.totalpurcount = result.data.totalpurcount
-					this.deliveryData.totalsalecount = result.data.totalsalecount
-					this.deliveryData.totalworkcount = result.data.totalworkcount
+					this.deliveryData.totalpurcount = parseFloat(result.data.totalpurcount).toFixed(2)
+					this.deliveryData.totalsalecount = parseFloat(result.data.totalsalecount).toFixed(2)
+					this.deliveryData.totalworkcount = parseFloat(result.data.totalworkcount).toFixed(2)
 				} else {
 					this.$api.msg(result.erroinfo);
 				}
@@ -481,6 +481,13 @@
 			// 跳转链接
 			navTo(url){
 				var url = url + '?type=' + this.currentType
+				uni.navigateTo({
+					url
+				});
+			},
+			// 跳转链接
+			navTo2(url){
+				console.log(url)
 				uni.navigateTo({
 					url
 				});
@@ -723,6 +730,9 @@ view {
 			border-left: 2upx solid #999;
 			color: #fff;
 			position: relative;
+			.news-box{
+				height: 100%;
+			}
 			.boss {
 				font-size: 32upx;
 				margin-bottom: 30upx;

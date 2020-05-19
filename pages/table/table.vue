@@ -9,10 +9,10 @@
 		</view>
 		<view class="notice-text" v-else-if="tableType =='Produce'">你超过的交期生产订单是<text class="red">0.00</text>，是否忘记入库还是真的超交期？</view>
     <!-- 接单的时间组件 -->
-		<view class="data-box" @click="open">
+		<!-- <view class="data-box" @click="open">
 			<view class="firstTime">{{startDate}}</view>
 			<image class="image" src="/static/xiala.png" />
-		</view>
+		</view> -->
 		<!-- 价格 选择 -->
 		<view class="btn-box" v-if="commomType=='Price'||commomType=='PriceSupplier'">
 			<view class="commomStyle left" :class="commomType=='Price'?'active':''" @click="changePriceType(1)">客户</view>
@@ -233,40 +233,7 @@ export default {
 					key: "proportion",
 					width: 150
 				}],
-				PriceTableData: [{
-					name: "张三",
-					time: "2020-05-01",
-					people: "张三丰",
-					ordercode: '12345678',
-					wucode: "123456789",
-					shopname: "高帮特步青少年布鞋",
-					ordernum: "9999",
-					mallprice: "9999",
-					dataprice: "9999",
-					proportion: "100%",
-				},{
-					name: "张三",
-					time: "2020-05-01",
-					people: "张三丰",
-					ordercode: '12345678',
-					wucode: "123456789",
-					shopname: "高帮特步青少年布鞋",
-					ordernum: "9999",
-					mallprice: "9999",
-					dataprice: "9999",
-					proportion: "100%",
-				},{
-					name: "张三",
-					time: "2020-05-01",
-					people: "张三丰",
-					ordercode: '12345678',
-					wucode: "123456789",
-					shopname: "高帮特步青少年布鞋",
-					ordernum: "9999",
-					mallprice: "9999",
-					dataprice: "9999",
-					proportion: "100%",
-				}],
+				PriceTableData: [],
 
 				// 价格-供应商
 				PriceSupplierColumns: [{
@@ -310,40 +277,20 @@ export default {
 					key: "proportion",
 					width: 150
 				}],
-				PriceSupplierTableData: [{
-					name: "张三",
-					time: "2020-05-01",
-					people: "张三丰",
-					ordercode: '12345678',
-					wucode: "123456789",
-					shopname: "高帮特步青少年布鞋",
-					ordernum: "9999",
-					mallprice: "9999",
-					dataprice: "9999",
-					proportion: "100%",
-				},{
-					name: "张三",
-					time: "2020-05-01",
-					people: "张三丰",
-					ordercode: '12345678',
-					wucode: "123456789",
-					shopname: "高帮特步青少年布鞋",
-					ordernum: "9999",
-					mallprice: "9999",
-					dataprice: "9999",
-					proportion: "100%",
-				},{
-					name: "张三",
-					time: "2020-05-01",
-					people: "张三丰",
-					ordercode: '12345678',
-					wucode: "123456789",
-					shopname: "高帮特步青少年布鞋",
-					ordernum: "9999",
-					mallprice: "9999",
-					dataprice: "9999",
-					proportion: "100%",
-				}],
+				PriceSupplierTableData: [
+					// {
+					// 	name: "张三",
+					// 	time: "2020-05-01",
+					// 	people: "张三丰",
+					// 	ordercode: '12345678',
+					// 	wucode: "123456789",
+					// 	shopname: "高帮特步青少年布鞋",
+					// 	ordernum: "9999",
+					// 	mallprice: "9999",
+					// 	dataprice: "9999",
+					// 	proportion: "100%",
+					// }
+				],
 
 				// 交期-客户
 				DeliveryColumns: [{
@@ -387,40 +334,9 @@ export default {
 					key: "proportion",
 					width: 200
 				}],
-				DeliveryTableData: [{
-					name: "张三",
-					time: "2020-05-01",
-					people: "张三丰",
-					ordercode: '12345678',
-					wucode: "123456789",
-					shopname: "高帮特步青少年布鞋",
-					ordernum: "9999",
-					mallprice: "9999",
-					dataprice: "9999",
-					proportion: "100%",
-				},{
-					name: "张三",
-					time: "2020-05-01",
-					people: "张三丰",
-					ordercode: '12345678',
-					wucode: "123456789",
-					shopname: "高帮特步青少年布鞋",
-					ordernum: "9999",
-					mallprice: "9999",
-					dataprice: "9999",
-					proportion: "100%",
-				},{
-					name: "张三",
-					time: "2020-05-01",
-					people: "张三丰",
-					ordercode: '12345678',
-					wucode: "123456789",
-					shopname: "高帮特步青少年布鞋",
-					ordernum: "9999",
-					mallprice: "9999",
-					dataprice: "9999",
-					proportion: "100%",
-				}],
+				DeliveryTableData: [],
+
+
 				// 交期-供应商
 				DeliverySupplierColumns: [{
 					title: "供应商",
@@ -464,28 +380,6 @@ export default {
 					width: 200
 				}],
 				DeliverySupplierTableData: [{
-					name: "张三",
-					time: "2020-05-01",
-					people: "张三丰",
-					ordercode: '12345678',
-					wucode: "123456789",
-					shopname: "高帮特步青少年布鞋",
-					ordernum: "9999",
-					mallprice: "9999",
-					dataprice: "9999",
-					proportion: "100%",
-				},{
-					name: "张三",
-					time: "2020-05-01",
-					people: "张三丰",
-					ordercode: '12345678',
-					wucode: "123456789",
-					shopname: "高帮特步青少年布鞋",
-					ordernum: "9999",
-					mallprice: "9999",
-					dataprice: "9999",
-					proportion: "100%",
-				},{
 					name: "张三",
 					time: "2020-05-01",
 					people: "张三丰",

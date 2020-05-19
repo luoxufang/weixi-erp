@@ -66,9 +66,22 @@
 			"style": {
 				"navigationBarTitleText": "库存"
 			}
+		}, {
+			"path": "pages/main/receipt",
+			"style": {
+				"navigationBarTitleText": "收款/付款"
+			}
+		}, {
+			"path": "pages/main/priceList",
+			"style": {
+				"navigationBarTitleText": "价格"
+			}
+		}, {
+			"path": "pages/main/delivery",
+			"style": {
+				"navigationBarTitleText": "交期"
+			}
 		}
-
-
 		
 		// 销售 三模块
 		, {
