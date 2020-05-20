@@ -1,11 +1,8 @@
 <template>
 	<view class="table-box" style="background:#fff;">
 
-		<!-- <view class="time-btn">
-			<text style="font-size:28upx;">日期范围</text>
-			<button class="mini-btn" style="margin-left: 40upx" :class="timeType=='month'?'active':''" @click="changeData('month')" type="default" size="mini">本月</button>
-			<button class="mini-btn" style="margin-left: 40upx" :class="timeType=='year'?'active':''" @click="changeData('year')" type="default" size="mini">本年</button>
-		</view> -->
+    <!-- 基本用法 -->
+    <uni-search-bar @confirm="search" @input="input" placeholder="搜索客户"></uni-search-bar>
 		
 		<view class="data-box" @click="open">
       <text style="margin-left:0;">选择期间</text>
@@ -16,13 +13,13 @@
 			<image class="image" src="/static/xiala.png" />
 		</view>
 
-    <view class="selectPeople" @click.stop="toggleSpec()">
+    <!-- <view class="selectPeople" @click.stop="toggleSpec()">
       <view class="title">选择客户</view>
       <view class="right">
         <button type="default" size="mini">全部</button>
         <image class="image" src="/static/xiala2.png" />
       </view>
-    </view>
+    </view> -->
 
     <view class="table">
 			<z-table :tableData='SaleOrderTableData' :columns='SaleOrderColumns' stickSide='true'></z-table>
@@ -228,10 +225,13 @@ export default {
       this.getcustprofitlist(time1, time2)
     },
     search(e){
-			console.log(e)
+			console.log(this.keyword)
+			// if(!this.keyword) return
+			this.getcustprofitlist(this.startDate, this.endDate)
 		},
 		input(e){
 			// console.log(e)
+			this.keyword = e.value
 		},
 		changeData(type){
 			this.timeType = type

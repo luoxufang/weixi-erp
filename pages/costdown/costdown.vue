@@ -1,18 +1,14 @@
 <template>
 	<view class="table-box" style="background:#fff;">
 
-		<!-- <view class="time-btn">
-			<text style="font-size:28upx;">日期范围</text>
-			<button class="mini-btn" style="margin-left: 40upx" :class="timeType=='month'?'active':''" @click="changeData('month')" type="default" size="mini">本月</button>
-			<button class="mini-btn" style="margin-left: 40upx" :class="timeType=='year'?'active':''" @click="changeData('year')" type="default" size="mini">本年</button>
-		</view> -->
+    <!-- 基本用法 -->
+    <uni-search-bar @confirm="search" @input="input" placeholder="搜索客户"></uni-search-bar>
 
-    <view class="selectPeople" @click.stop="toggleSelect()">
+    <!-- <view class="selectPeople" @click.stop="toggleSelect()">
       <view class="title">选择客户</view>
       <view class="right">
         <button type="default" size="mini">全部</button>
         <image class="image" src="/static/xiala2.png" />
-
         <view class="toggle-view" :class="selectClass">
           <view class="item-scroll-view">
             <view class="item">物料一</view>
@@ -25,9 +21,8 @@
             <view class="item">物料一</view>
           </view>
         </view>
-
       </view>
-    </view>
+    </view> -->
 		
 		<view class="data-box" @click="open">
       <text style="margin-left:0;">选择期间</text>
@@ -74,6 +69,7 @@ export default {
     },
   data(){
     return{
+      keyword: '',
       selectClass: 'none',
       candidates: ['北京', '南京', '东京'],
 			city: '',
@@ -186,7 +182,7 @@ export default {
         enddate: enddate,
         startdate2: startdate,
         enddate2: enddate,
-        keyword: ''
+        keyword: this.keyword
       });
       
       if (result.ret === 1) {
@@ -212,10 +208,13 @@ export default {
       }
     },
     search(e){
-			console.log(e)
+			console.log(this.keyword)
+			// if(!this.keyword) return
+			this.getcostdownlist(this.startDate, this.endDate)
 		},
 		input(e){
 			// console.log(e)
+			this.keyword = e.value
 		},
 		changeData(type){
 			this.timeType = type

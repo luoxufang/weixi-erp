@@ -1,88 +1,69 @@
 <template>
   <view class="ranking-box">
-    <view class="navbar">
-			<view v-for="(item, index) in navList" :key="index" class="nav-item" :class="{ current: tabCurrentIndex === index }" @click="tabClick(index)">{{ item.text }}</view>
-		</view>
+    <view class="position-view">
+      <view class="navbar">
+        <view v-for="(item, index) in navList" :key="index" class="nav-item" :class="{ current: tabCurrentIndex === index }" @click="tabClick(index)">{{ item.text }}</view>
+      </view>
 
-    <view class="data-box" @click="open">
-      <text style="font-size:28upx;">选择时间</text>
-			<view class="firstTime">{{startDate}}</view>
-			<image class="image" src="/static/xiala.png" />
-			<text>到</text>
-			<view class="endTime">{{endDate}}</view>
-			<image class="image" src="/static/xiala.png" />
-		</view>
+      <view class="data-box" @click="open">
+        <!-- <text style="font-size:28upx;">选择时间</text> -->
+        <view class="firstTime">{{startDate}}</view>
+        <image class="image" src="/static/xiala.png" />
+        <text>到</text>
+        <view class="endTime">{{endDate}}</view>
+        <image class="image" src="/static/xiala.png" />
+      </view>
+    </view>
 
     <swiper :current="tabCurrentIndex" class="swiper-box" duration="300" @change="changeTab">
 			<swiper-item class="tab-content" v-for="(tabItem, tabIndex) in navList" :key="tabIndex">
 				<scroll-view class="list-scroll-content" scroll-y>
 					<!-- 空白页 -->
-					<empty v-if="tabItem.loaded === true && tabItem.rankList.length === 0"></empty>
+					<empty v-if="tabItem.rankList.length === 0"></empty>
 
           <view class="cart-backgound-box">
             <image class="image" src="/static/cart.png" />
           </view>
-          <view class="top-three-box">
-            <view class="top-three-item two">
+          <view class="top-three-box" v-if="tabItem.rankList.length">
+            <view class="top-three-item two" v-if="tabItem.rankList[1].username">
               <view class="image-box">
                 <image class="image" src="/static/aa.png" />
               </view>
-              <view class="name">张三</view>
-              <view class="money">￥11111.00</view>
+              <view class="name">{{tabItem.rankList[1].username}}</view>
+              <view class="money">￥{{tabItem.rankList[1].totalamount}}</view>
             </view>
 
-            <view class="top-three-item one">
+            <view class="top-three-item one" v-if="tabItem.rankList[0].totalamount">
               <view class="image-box">
                 <image class="image" src="/static/aa.png" />
               </view>
-              <view class="name">李四</view>
-              <view class="money">￥11111.00</view>
+              <view class="name">{{tabItem.rankList[0].username||'某某某'}}</view>
+              <view class="money">￥{{tabItem.rankList[0].totalamount}}</view>
             </view>
             
-            <view class="top-three-item three">
+            <view class="top-three-item three" v-if="tabItem.rankList[2].username">
               <view class="image-box">
                 <image class="image" src="/static/aa.png" />
               </view>
-              <view class="name">王五</view>
-              <view class="money">￥11111.00</view>
+              <view class="name">{{tabItem.rankList[2].username}}</view>
+              <view class="money">￥{{tabItem.rankList[2].totalamount}}</view>
             </view>
           </view>
 
           <view class="rank-list">
-            <view class="item">
-              <view class="heard-view">
-                <text class="number">3</text>
-                <text style="margin-left:30upx;">亿源科技</text>
+            <block v-for="(item, index) in tabItem.rankList" :key="index">
+              <view class="item" v-if="index>2">
+                <view class="heard-view">
+                  <text class="number">{{index+1}}</text>
+                  <text style="margin-left:30upx;">{{item.username}}</text>
+                </view>
+                <view>￥{{item.totalamount}}</view>
               </view>
-              <view>￥7779.00</view>
-            </view>
-            <view class="item">
-              <view class="heard-view">
-                <text class="number">3</text>
-                <text style="margin-left:30upx;">老北京布鞋</text>
-              </view>
-              <view>￥88888.00</view>
-            </view>
-            <view class="item">
-              <view class="heard-view">
-                <text class="number">4</text>
-                <text style="margin-left:30upx;">传奇经典</text>
-              </view>
-              <view>￥66666.00</view>
-            </view>
-            <view class="item">
-              <view class="heard-view">
-                <text class="number">5</text>
-                <text style="margin-left:30upx;">统一香飘飘</text>
-              </view>
-              <view>￥99999.00</view>
-            </view>
+            </block>
           </view>
 
 					<!-- 数据列表 -->
-					<view v-for="(item, index) in tabItem.rankList" :key="index" class="order-item">
-
-					</view>
+					<!-- <view v-for="(item, index) in tabItem.rankList" :key="index" class="order-item"></view> -->
 
 					<!-- <uni-load-more :status="tabItem.loadingType"></uni-load-more> -->
 				</scroll-view>
@@ -114,7 +95,8 @@ export default {
     return {
       startDate: '',
 			endDate: '',
-			showCalendar: false,
+      showCalendar: false,
+      toptype: '1', // tab类型
       info: {
 				date: '',
 				startDate: '2019-06-15',
@@ -167,32 +149,67 @@ export default {
     
     this.gettopsalelist(today,today)
   },
-  open() {
-    this.$refs.calendar.open()
-  },
+  
   methods: {
-    // gettopsalelist
     async gettopsalelist(startdate,enddate){
       const result = await this.$api.interfaceApi('gettopsalelist')({
 				token: uni.getStorageSync('token'),
         shopid: uni.getStorageSync('shopid'),
         startdate: startdate,
         enddate: enddate,
-        keyword: '',
-        toptype: '1',//1业务员 2客户 3部门
+        toptype: this.toptype,//1业务员 2客户 3部门
       });
-      
       if (result.ret === 1) {
 				if(result.data.result.length>0){
-					this.$api.msg(result.erroinfo);
-					this.dataList = result.data.result
+          var aaaa = result.data.result.map((item)=>{
+            item.totalamount = parseFloat(item.totalamount).toFixed(2)
+            return item
+          })
+          switch (this.toptype) {
+            case '1':
+              this.navList[0].rankList = aaaa
+              this.navList[0].loadingType = 'none'
+              break;
+            case '2':
+              this.navList[1].rankList = aaaa
+              this.navList[1].loadingType = 'none'
+              break;
+            case '3':
+              this.navList[2].rankList = aaaa
+              this.navList[2].loadingType = 'none'
+              break;
+          
+            default:
+              break;
+          }
+          this.$api.msg(result.erroinfo);
+          
+          console.log(this.navList[0].rankList, '111111111111')
+          console.log(this.navList[1].rankList, '222222222222222')
+          console.log(this.navList[2].rankList, '3333333333333')
 				}else{
-					this.custList = []
+					switch (this.toptype) {
+            case '1':
+              this.navList[0].loadingType = 'none'
+              break;
+            case '2':
+              this.navList[1].loadingType = 'none'
+              break;
+            case '3':
+              this.navList[2].loadingType = 'none'
+              break;
+          
+            default:
+              break;
+          }
 					this.$api.msg('暂无数据');
 				}
 			} else {
 				this.$api.msg(result.erroinfo);
 			}
+    },
+    open() {
+      this.$refs.calendar.open()
     },
 		confirm(e){
 			console.log(e)
@@ -202,27 +219,32 @@ export default {
         if(time2>time1){
           this.startDate = e.range.before
           this.endDate = e.range.after
-          this.getTableData(e.range.before,e.range.after)
+          this.gettopsalelist(e.range.before,e.range.after)
         }else{
           this.startDate = e.range.after
           this.endDate = e.range.before
-          this.getTableData(e.range.after,e.range.before)
+          this.gettopsalelist(e.range.after,e.range.before)
         }
         
       } else {
         this.startDate = e.fulldate
         this.endDate = e.fulldate
-        this.getTableData(e.fulldate,e.fulldate)
+        this.gettopsalelist(e.fulldate,e.fulldate)
       }
 		},
     //swiper 切换
     changeTab(e) {
-      this.tabCurrentIndex = e.target.current;
-      // this.loadData('tabChange');
+      this.tabCurrentIndex = e.detail.current;
+      this.toptype = (e.detail.current + 1) + ''
+      if(this.navList[e.detail.current].loadingType=='none') return
+      this.gettopsalelist(this.startDate, this.endDate);
     },
     //顶部tab点击
     tabClick(index) {
       this.tabCurrentIndex = index;
+      this.toptype = (index + 1) + ''
+      if(this.navList[index].loadingType=='none') return
+      this.gettopsalelist(this.startDate, this.endDate);
     }
   }
 }
@@ -230,6 +252,13 @@ export default {
 <style lang="scss">
 .ranking-box{
   width: 100%;
+  padding-top: 160upx;
+  .position-view{
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+  }
 }
 .swiper-box {
 	height: calc(100% - 40px);
@@ -275,6 +304,8 @@ export default {
       .money {
         text-align: center;
         margin-top: 40upx;
+        font-size: 26upx;
+        color: #666;
       }
     }
     .one{
@@ -295,9 +326,10 @@ export default {
 .data-box{
 	display: flex;
 	align-items: center;
-	padding: 0 20upx;
+	padding: 20upx;
 	font-size: 28upx;
-	margin-bottom: 20upx;
+  justify-content: center;
+  background: #fff;
 	text{
 		margin: 0 20upx;
 	}

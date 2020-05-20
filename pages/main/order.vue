@@ -1,15 +1,13 @@
 <template>
 	<view class="table-box" style="background:#fff;">
 
-    <view class="notice-text">
-			你的超过交期的订单是<text class="red">{{totalsalecount}}</text>万元，超过交期的采购订单<text class="red">{{totalpurcount}}</text>万元，是否忘入库还是真的超交期？
-		</view>
+    <view class="notice-text">你超过的交期生产订单是<text class="red">{{totalworkcount}}</text>，是否忘记入库还是真的超交期？</view>
 
     <!-- 价格 选择 -->
-		<view class="btn-box">
+		<!-- <view class="btn-box">
 			<view class="commomStyle left" :class="billtype=='1'?'active':''" @click="changePriceType(1)">客户</view>
 			<view class="commomStyle right" :class="billtype=='2'?'active':''" @click="changePriceType(2)">供应商</view>
-		</view>
+		</view> -->
 
     <view class="table">
 			<z-table :tableData='DeliveryTableData' :columns='DeliveryColumns' stickSide='true'></z-table>
@@ -40,8 +38,9 @@ export default {
   data(){
     return{
 			today: '', // 今天
-      billtype: '1',
+      billtype: '3',
       selectClass: 'none',
+      totalworkcount: '0', // 生产
       totalsalecount:'0', // 交期销售订单额
       totalpurcount:'0', // 交期采购订单额
 			startDate: '',
@@ -58,22 +57,13 @@ export default {
 			},
 			timeType: 'today',// week, month, year
 			tableType: '',// 固定左侧
-
-        // 交期-客户
+        // 
 				DeliveryColumns: [{
-					title: "客户",
-					key: "custname"
+					title: "生产订单",
+					key: "billcode"
 				}, {
 					title: "日期",
 					key: "billdate",
-					width: 200
-				}, {
-					title: "业务员",
-					key: "username",
-					width: 150
-				}, {
-					title: "订单号",
-					key: "custbillcode",
 					width: 200
 				}, {
 					title: "物料编码",
@@ -84,16 +74,8 @@ export default {
 					key: "prodname",
 					width: 240
 				}, {
-					title: "订单数量",
-					key: "prodcount",
-					width: 150
-				}, {
-					title: "销售价格",
-					key: "num_10",
-					width: 180
-				}, {
-					title: "订单金额",
-					key: "amounttax",
+					title: "生产数量",
+					key: "outprodcount",
 					width: 150
 				}, {
 					title: "超过交期天数",
@@ -101,49 +83,6 @@ export default {
 					width: 200
 				}],
         DeliveryTableData: [],
-        
-			  // 交期-供应商
-				DeliverySupplierColumns: [{
-					title: "供应商",
-					key: "custname",
-					// width: 120
-				}, {
-					title: "日期",
-					key: "billdate",
-					width: 200
-				}, {
-					title: "采购员",
-					key: "username",
-					width: 150
-				}, {
-					title: "订单号",
-					key: "custbillcode",
-					width: 200
-				}, {
-					title: "物料编码",
-					key: "prodno",
-					width: 200
-				}, {
-					title: "商品名称",
-					key: "prodname",
-					width: 240
-				}, {
-					title: "订单数量",
-					key: "prodcount",
-					width: 120
-				}, {
-					title: "采购价格",
-					key: "num_10",
-					width: 180
-				}, {
-					title: "订单金额",
-					key: "amounttax",
-					width: 150
-				}, {
-					title: "超过交期天数",
-					key: "nextcomudate", // 今天 - nextcomudate
-					width: 200
-				}],
     }
   },
 	onLoad(options){
@@ -163,9 +102,7 @@ export default {
 		this.today = today
 		this.startDate = today
     this.endDate = today
-    
-    this.totalsalecount = options.totalsalecount
-    this.totalpurcount = options.totalpurcount
+    this.totalworkcount = options.totalworkcount
 
 		this.getoverdatelist(today,today)
 		
@@ -199,6 +136,14 @@ export default {
 							})
               that.DeliveryTableData = data
 
+            }else if(that.billtype=='3'){ // 生产
+							that.DeliveryColumns = that.DeliverySupplierColumns
+							var data = result.data.result.map((item)=>{
+								item.nextcomudate = util.GetNumberOfDays(item.finishdate, that.today)
+								return item
+							})
+              that.DeliveryTableData = data
+              
             }
 					}else{
             that.DeliveryTableData = []

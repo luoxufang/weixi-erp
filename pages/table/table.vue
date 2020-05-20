@@ -417,28 +417,7 @@ export default {
 					key: "proportion",
 					width: 100
 				}],
-				ProduceTableData: [{
-					name: "12345678",
-					time: "2020-05-01",
-					wucode: "123456789",
-					shopname: "高帮特步青少年布鞋",
-					ordernum: "9999",
-					proportion: "10",
-				},{
-					name: "12345678",
-					time: "2020-05-01",
-					wucode: "123456789",
-					shopname: "高帮特步青少年布鞋",
-					ordernum: "9999",
-					proportion: "10",
-				},{
-					name: "12345678",
-					time: "2020-05-01",
-					wucode: "123456789",
-					shopname: "高帮特步青少年布鞋",
-					ordernum: "9999",
-					proportion: "10",
-				}]
+				ProduceTableData: []
 			},
 			
     }

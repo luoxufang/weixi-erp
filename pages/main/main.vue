@@ -6,7 +6,8 @@
 			<view class="left-view">
 				<view v-for="(fitem, index) in flist" :key="fitem.id" class="f-item b-b" :class="{ active: fitem.id === currentId }" @click="tabtap(fitem, index)">{{ fitem.label }}</view>
 			</view>
-			<view class="right-view" @click="navTo(`/pages/table/table`)">
+			<!-- @click="navTo(`/pages/table/table`)" -->
+			<view class="right-view">
 				<view class="news-box" v-if="currentType=='Receipt'" 
 				@click.stop="navTo2(`/pages/sale/indexOrder?todayamount=`+getorderData.todayamount+'&last5amount='+getorderData.last5amount+'&lastmonthamount='+getorderData.lastmonthamount)">
 					<view class="boss">BOSS:</view>
@@ -36,7 +37,7 @@
 					<view class="notice">超过交期的采购订单{{deliveryData.totalpurcount}}元</view>
 					<view class="notice">是否忘记出入库还是真的超交期？</view>
 				</view>
-				<view class="news-box" v-if="currentType=='Produce'">
+				<view class="news-box" v-if="currentType=='Produce'" @click.stop="navTo2('/pages/main/order?totalworkcount='+deliveryData.totalworkcount)">
 					<view class="boss">BOSS:</view>
 					<view class="notice">你的超过交期的生产订单有{{deliveryData.totalworkcount}}条</view>
 					<view class="notice">是否忘记入库还是真的超交期？</view>
@@ -425,7 +426,7 @@
 					token: uni.getStorageSync('token'),
 					shopid: uni.getStorageSync('shopid')
 				});
-				console.log(result,'交期')
+				// console.log(result,'交期')
 				if (result.ret === 1) {
 					this.flist[this.currentId-1].loaded = true
 					this.deliveryData.totalpurcount = parseFloat(result.data.totalpurcount).toFixed(2)
@@ -526,7 +527,8 @@
 					case 5:
 						this.currentType = "Produce"
 						if(fitem.loaded) return
-
+						// 与交期同一接口，取值为接口返回的第三个参数
+						this.getoverdateInfo() 
 						break;
 				
 					default:
