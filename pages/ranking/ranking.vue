@@ -184,9 +184,6 @@ export default {
           }
           this.$api.msg(result.erroinfo);
           
-          console.log(this.navList[0].rankList, '111111111111')
-          console.log(this.navList[1].rankList, '222222222222222')
-          console.log(this.navList[2].rankList, '3333333333333')
 				}else{
 					switch (this.toptype) {
             case '1':

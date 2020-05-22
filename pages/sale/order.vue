@@ -86,7 +86,7 @@ export default {
 			}, {
 				title: "数量",
 				key: "prodcount",
-				width: 100
+				width: 150
 			}, {
 				title: "单位",
 				key: "produnitname",
