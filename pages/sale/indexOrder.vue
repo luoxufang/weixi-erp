@@ -156,7 +156,7 @@ export default {
 					that.SaleOrderTableData = result.data.result
 				}else{
 					that.SaleOrderTableData = []
-					that.$api.msg('暂未无数据');
+					that.$api.msg('暂无数据');
 				}
 			} else {
 				that.$api.msg(result.erroinfo);

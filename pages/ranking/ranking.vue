@@ -27,9 +27,9 @@
           <view class="top-three-box" v-if="tabItem.rankList.length">
             <view class="top-three-item two" v-if="tabItem.rankList[1].username">
               <view class="image-box">
-                <image class="image" src="/static/aa.png" />
+                <image class="image" src="/static/one.png" />
               </view>
-              <view class="name">{{tabItem.rankList[1].username}}</view>
+              <view class="name">{{tabItem.rankList[1].username||'无名字'}}</view>
               <view class="money">￥{{tabItem.rankList[1].totalamount}}</view>
             </view>
 
@@ -37,15 +37,15 @@
               <view class="image-box">
                 <image class="image" src="/static/aa.png" />
               </view>
-              <view class="name">{{tabItem.rankList[0].username||'某某某'}}</view>
+              <view class="name">{{tabItem.rankList[0].username||'无名字'}}</view>
               <view class="money">￥{{tabItem.rankList[0].totalamount}}</view>
             </view>
             
             <view class="top-three-item three" v-if="tabItem.rankList[2].username">
               <view class="image-box">
-                <image class="image" src="/static/aa.png" />
+                <image class="image" src="/static/one.png" />
               </view>
-              <view class="name">{{tabItem.rankList[2].username}}</view>
+              <view class="name">{{tabItem.rankList[2].username||'无名字'}}</view>
               <view class="money">￥{{tabItem.rankList[2].totalamount}}</view>
             </view>
           </view>
@@ -55,7 +55,7 @@
               <view class="item" v-if="index>2">
                 <view class="heard-view">
                   <text class="number">{{index+1}}</text>
-                  <text style="margin-left:30upx;">{{item.username}}</text>
+                  <text style="margin-left:30upx;">{{item.username||'无名字'}}</text>
                 </view>
                 <view>￥{{item.totalamount}}</view>
               </view>

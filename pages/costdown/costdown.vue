@@ -24,13 +24,17 @@
       </view>
     </view> -->
 		
-		<view class="data-box" @click="open">
-      <text style="margin-left:0;">选择期间</text>
-			<view class="firstTime">{{startDate}}</view>
-			<image class="image" src="/static/xiala.png" />
-			<text>到</text>
-			<view class="endTime">{{endDate}}</view>
-			<image class="image" src="/static/xiala.png" />
+		<view class="data-box">
+      <view class="item-view left">
+        <text style="margin-left:0;">选择期间</text>
+        <view class="firstTime" @click="open">{{endDate}}</view>
+        <image class="image" src="/static/xiala.png" />
+      </view>
+      <view class="item-view right">
+        <text style="margin-left:0;">对比期间</text>
+        <view class="endTime" @click="open2">{{endDate2}}</view>
+        <image class="image" src="/static/xiala.png" />
+      </view>
 		</view>
 
     <!-- <view class="selectPeople">
@@ -53,6 +57,15 @@
 		:range="info.range" 
 		@confirm="confirm" />
 
+    <uni-calendar ref="calendar2" 
+		:date="info2.date" 
+		:insert="info2.insert" 
+		:lunar="info2.lunar" 
+		:startDate="info2.startDate" 
+		:endDate="info2.endDate" 
+		:range="info2.range" 
+		@confirm="confirm2" />
+
   </view>
 </template>
 <script>
@@ -74,14 +87,25 @@ export default {
       candidates: ['北京', '南京', '东京'],
 			city: '',
 			startDate: '',
-			endDate: '',
+      endDate: '',
+      startDate2: '',
+			endDate2: '',
 			showCalendar: false,
 			info: {
 				date: '',
 				startDate: '2019-06-15',
 				endDate: '2019-010-15',
 				lunar: true,
-				range: true,
+				range: false,
+				insert: false,
+				selected: []
+      },
+      info2: {
+				date: '',
+				startDate: '2019-06-15',
+				endDate: '2019-010-15',
+				lunar: true,
+				range: false,
 				insert: false,
 				selected: []
 			},
@@ -126,11 +150,11 @@ export default {
         {
 					title: "C/D金额",
 					key: "lastavgprice", // （lastavgprice*totalcount）-totalamount
-					width: 120
+					width: 240
 				}, {
 					title: "C/DRate", // ((totalamount/totalcount) -lastavgprice)/lastavgprice * 100  显示%
 					key: "totalamount",
-					width: 120
+					width: 160
 				}
 			],
 			
@@ -167,21 +191,23 @@ export default {
 		var today = day2.getFullYear()+"-" + Month + "-" + date;
 		this.startDate = today
 		this.endDate = today
-		console.log(options)
+		this.startDate2 = today
+    this.endDate2 = today
+    // -----------------------------
 		this.tableType = options.type
     
     this.getcostdownlist(today,today)
 	},
   methods:{
     // getcostdownlist
-    async getcostdownlist(startdate,enddate){
+    async getcostdownlist(){
       const result = await this.$api.interfaceApi('getcostdownlist')({
 				token: uni.getStorageSync('token'),
         shopid: uni.getStorageSync('shopid'),
-        startdate: startdate,
-        enddate: enddate,
-        startdate2: startdate,
-        enddate2: enddate,
+        startdate: this.startDate,
+        enddate: this.endDate,
+        startdate2: this.startDate2,
+        enddate2: this.endDate2,
         keyword: this.keyword
       });
       
@@ -223,6 +249,9 @@ export default {
 		open() {
 			this.$refs.calendar.open()
 		},
+		open2() {
+			this.$refs.calendar2.open()
+		},
 		confirm(e){
 			console.log(e)
 			if(e.range.before && e.range.after){
@@ -243,7 +272,27 @@ export default {
         this.endDate = e.fulldate
         this.getcostdownlist(e.fulldate,e.fulldate)
       }
-		}
+    },
+    confirm2(e){
+			if(e.range.before && e.range.after){
+        var time1=new Date(e.range.before);
+        var time2=new Date(e.range.after);
+        if(time2>time1){
+          this.startDate2 = e.range.before
+          this.endDate2 = e.range.after
+          this.getcostdownlist()
+        }else{
+          this.startDate2 = e.range.after
+          this.endDate2 = e.range.before
+          this.getcostdownlist()
+        }
+        
+      } else {
+        this.startDate2 = e.fulldate
+        this.endDate2 = e.fulldate
+        this.getcostdownlist()
+      }
+    }
   }
 }
 </script>
@@ -287,6 +336,13 @@ button::after{
 	font-size: 28upx;
 	margin-bottom: 20upx;
   margin-top: 30upx;
+  .item-view{
+    flex: 1;
+    display: flex;
+    &.right{
+      justify-content: flex-end;
+    }
+  }
 	text{
 		margin: 0 20upx;
 	}

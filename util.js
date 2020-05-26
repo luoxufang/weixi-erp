@@ -152,11 +152,48 @@ export default {
     // for(;e<0;t/=10,e++);
     return Math.round(v*t)/t;
   },
-  GetNumberOfDays(date1,date2){//获得天数
+  GetNumberOfDays(date1,date2){//获得两日期之间的天数
     //date1：开始日期，date2结束日期
     var a1 = Date.parse(new Date(date1));
     var a2 = Date.parse(new Date(date2));
     var day = parseInt((a2-a1)/ (1000 * 60 * 60 * 24));//核心：时间戳相减，然后除以天数
     return day
+  },
+  yugi(n){ // 获取N天前的日期（国际日期）
+    var now = new Date;
+    now.setDate(now.getDate() - n);
+    return now;
+  },
+  // getymd(dateStr) {
+  //   var d = new Date(dateStr);
+  //   var resDate = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+  //   return resDate;
+  // },
+  getymd(dateStr) { // js将国际日期字符串转成日期格式，返回年月日
+    var d = new Date(dateStr);　　　
+    var s = '';　
+    var mouth = (d.getMonth() + 1)>=10?(d.getMonth() + 1):('0'+(d.getMonth() + 1));　
+    var day = d.getDate()>=10?d.getDate():('0'+d.getDate());　
+    s += d.getFullYear() + '-'; // 获取年份。	
+    s += mouth + "-"; // 获取月份。	　　
+    s += day; // 获取日。　
+    return (s); // 返回日期。		    　　
+  },
+  getAll(begin, end) { // 初始时间和结束时间的所以日期	　　　　
+    var arr = [];
+    var ab = begin.split("-");
+    var ae = end.split("-");
+    var db = new Date();
+    db.setUTCFullYear(ab[0], ab[1] - 1, ab[2]);
+    var de = new Date();
+    de.setUTCFullYear(ae[0], ae[1] - 1, ae[2]);
+    var unixDb = db.getTime() - 24 * 60 * 60 * 1000;
+    var unixDe = de.getTime() - 24 * 60 * 60 * 1000;
+    for (var k = unixDb; k <= unixDe;) {
+      //console.log((new Date(parseInt(k))).format());
+      k = k + 24 * 60 * 60 * 1000;
+      arr.push(this.getymd( new Date(parseInt(k)) ) );
+    }
+    return arr;		    
   }
 }
