@@ -25,16 +25,25 @@
     </view> -->
 		
 		<view class="data-box">
+
       <view class="item-view left">
         <text style="margin-left:0;">选择期间</text>
-        <view class="firstTime" @click="open">{{endDate}}</view>
+        <view class="aaaa">
+          <view class="firstTime" @click="open">{{startDate}}</view>
+          <view class="firstTime" @click="open">{{endDate}}</view>
+        </view>
         <image class="image" src="/static/xiala.png" />
       </view>
+
       <view class="item-view right">
         <text style="margin-left:0;">对比期间</text>
-        <view class="endTime" @click="open2">{{endDate2}}</view>
+        <view class="aaaa">
+          <view class="endTime" @click="open2">{{startDate2}}</view>
+          <view class="endTime" @click="open2">{{endDate2}}</view>
+        </view>
         <image class="image" src="/static/xiala.png" />
       </view>
+      
 		</view>
 
     <!-- <view class="selectPeople">
@@ -96,7 +105,7 @@ export default {
 				startDate: '2019-06-15',
 				endDate: '2019-010-15',
 				lunar: true,
-				range: false,
+				range: true,
 				insert: false,
 				selected: []
       },
@@ -105,7 +114,7 @@ export default {
 				startDate: '2019-06-15',
 				endDate: '2019-010-15',
 				lunar: true,
-				range: false,
+				range: true,
 				insert: false,
 				selected: []
 			},

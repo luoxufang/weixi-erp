@@ -192,7 +192,7 @@
 						child: [
 							{ name: '销售订单', url: '/pages/sale/order' },
 							{ name: '销售出库', url: '/pages/sale/checkout' },
-							{ name: '应收帐数', url: '/pages/sale/bill' },
+							{ name: '应收账款', url: '/pages/sale/bill' },
 						]
 					},
 					{
@@ -203,7 +203,7 @@
 						child: [
 							{ name: '采购订单', url: '/pages/purchase/order' },
 							{ name: '采购入库', url: '/pages/purchase/laidup' },
-							{ name: '应收账款', url: '/pages/purchase/bill' },
+							{ name: '应付账款', url: '/pages/purchase/bill' },
 						]
 					},
 					{
@@ -222,7 +222,7 @@
 						url: '', // 如果有二级nav菜单,url为空；否则填写跳转页面
 						child: [
 							{ name: '自制计划单', url: '/pages/produce/selfmade' },
-							{ name: '委外计划单', url: '/pages/produce/entrust' }
+							{ name: '委外加工单', url: '/pages/produce/entrust' }
 						]
 					}
 				],

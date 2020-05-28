@@ -179,7 +179,7 @@ export default {
     s += day; // 获取日。　
     return (s); // 返回日期。		    　　
   },
-  getAll(begin, end) { // 初始时间和结束时间的所以日期	　　　　
+  getAll(begin, end) { // 初始时间和结束时间的所以日期
     var arr = [];
     var ab = begin.split("-");
     var ae = end.split("-");

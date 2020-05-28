@@ -102,7 +102,7 @@
 		}, {
 			"path": "pages/sale/bill",
 			"style": {
-				"navigationBarTitleText": "应收帐单"
+				"navigationBarTitleText": "应收账款"
 			}
 		}
 
@@ -120,7 +120,7 @@
 		}, {
 			"path": "pages/purchase/bill",
 			"style": {
-				"navigationBarTitleText": "应收账款"
+				"navigationBarTitleText": "应付账款"
 			}
 		}
 
@@ -141,7 +141,7 @@
 		}, {
 			"path": "pages/produce/entrust",
 			"style": {
-				"navigationBarTitleText": "计划单"
+				"navigationBarTitleText": "委外加工单"
 			}
 		}
 

@@ -102,7 +102,7 @@ export default {
 				startDate: '2019-06-15',
 				endDate: '2019-010-15',
 				lunar: true,
-				range: false,
+				range: true,
 				insert: false,
 				selected: []
 			},
@@ -168,15 +168,15 @@ export default {
           switch (this.toptype) {
             case '1':
               this.navList[0].rankList = aaaa
-              this.navList[0].loadingType = 'none'
+              // this.navList[0].loadingType = 'none'
               break;
             case '2':
               this.navList[1].rankList = aaaa
-              this.navList[1].loadingType = 'none'
+              // this.navList[1].loadingType = 'none'
               break;
             case '3':
               this.navList[2].rankList = aaaa
-              this.navList[2].loadingType = 'none'
+              // this.navList[2].loadingType = 'none'
               break;
           
             default:
@@ -187,13 +187,16 @@ export default {
 				}else{
 					switch (this.toptype) {
             case '1':
-              this.navList[0].loadingType = 'none'
+              // this.navList[0].loadingType = 'none'
+              this.navList[0].rankList = []
               break;
             case '2':
-              this.navList[1].loadingType = 'none'
+              // this.navList[1].loadingType = 'none'
+              this.navList[1].rankList = []
               break;
             case '3':
-              this.navList[2].loadingType = 'none'
+              // this.navList[2].loadingType = 'none'
+              this.navList[2].rankList = []
               break;
           
             default:

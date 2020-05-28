@@ -158,9 +158,6 @@
 			this.getstocktrendlist(today, today)
 		},
 		methods: {
-			forLoopGeData(){
-
-			},
 			getData(dataList){
 				var that = this
 				return new Promise((resolve, reject) => {
@@ -222,7 +219,7 @@
 				
 				let that = this
 				let dataList = this.dataList
-				this.categories = dataList //--------------------------------------
+				this.categories = dataList //-----------------------------------
 				let series = []
 				let stemp = {
 					name:'',

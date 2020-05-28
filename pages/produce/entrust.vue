@@ -69,7 +69,7 @@ export default {
 				key: "people",
 				width: 150
 			}, {
-				title: "生产订单号",
+				title: "委外加工订单号",
 				key: "custbillcode",
 				width: 200
 			}, {
