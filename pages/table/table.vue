@@ -639,19 +639,19 @@ export default {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border: 1upx solid #0084FF;
+		border: 1upx solid $base-color;
 		font-size: 28upx;
 		&.right{
 			background: #fff;
-			color: #0084FF;
+			color: $base-color;
 			&.active{
-				background: #0084FF;
+				background: $base-color;
 				color: #fff;
 			}
 		}
 		&.left{
 			&.active{
-				background: #0084FF;
+				background: $base-color;
 				color: #fff;
 			}
 		}

@@ -1,74 +1,104 @@
 <template>
   <view class="ranking-box">
-    <view class="position-view">
-      <view class="navbar">
-        <view v-for="(item, index) in navList" :key="index" class="nav-item" :class="{ current: tabCurrentIndex === index }" @click="tabClick(index)">{{ item.text }}</view>
+    <view class="aaaa">
+      <view class="cart-backgound-box">
+        <image class="image" src="/static/top.png" mode="aspectFill" />
       </view>
 
-      <view class="data-box" @click="open">
-        <!-- <text style="font-size:28upx;">选择时间</text> -->
-        <view class="firstTime">{{startDate}}</view>
-        <image class="image" src="/static/xiala.png" />
-        <text>到</text>
-        <view class="endTime">{{endDate}}</view>
-        <image class="image" src="/static/xiala.png" />
+      <view class="position-view">
+        <view class="navbar">
+          <view v-for="(item, index) in navList" :key="index" class="nav-item" :class="{ current: tabCurrentIndex === index }" @click="tabClick(index)">{{ item.text }}</view>
+        </view>
+
+        <view class="data-box" @click="open">
+          <!-- <text style="font-size:28upx;">选择时间</text> -->
+          <image class="image" src="/static/tiem.png" />
+          <view class="firstTime">{{startDate}}</view>
+          <text>到</text>
+          <image class="image" src="/static/tiem.png" />
+          <view class="endTime">{{endDate}}</view>
+        </view>
       </view>
     </view>
 
-    <swiper :current="tabCurrentIndex" class="swiper-box" duration="300" @change="changeTab">
-			<swiper-item class="tab-content" v-for="(tabItem, tabIndex) in navList" :key="tabIndex">
-				<scroll-view class="list-scroll-content" scroll-y>
-					<!-- 空白页 -->
-					<empty v-if="tabItem.rankList.length === 0"></empty>
+    <view class="flex-boxx">
+      <swiper :current="tabCurrentIndex" class="swiper-box" duration="300" @change="changeTab">
+        <swiper-item class="tab-content" v-for="(tabItem, tabIndex) in navList" :key="tabIndex">
+          <scroll-view class="list-scroll-content" scroll-y>
+            <!-- 空白页 -->
+            <empty v-if="tabItem.rankList.length === 0"></empty>
 
-          <view class="cart-backgound-box">
-            <image class="image" src="/static/cart.png" />
-          </view>
-          <view class="top-three-box" v-if="tabItem.rankList.length">
-            <view class="top-three-item two" v-if="tabItem.rankList[1].username">
-              <view class="image-box">
-                <image class="image" src="/static/one.png" />
-              </view>
-              <view class="name">{{tabItem.rankList[1].username||'无名字'}}</view>
-              <view class="money">￥{{tabItem.rankList[1].totalamount}}</view>
-            </view>
-
-            <view class="top-three-item one" v-if="tabItem.rankList[0].totalamount">
-              <view class="image-box">
-                <image class="image" src="/static/aa.png" />
-              </view>
-              <view class="name">{{tabItem.rankList[0].username||'无名字'}}</view>
-              <view class="money">￥{{tabItem.rankList[0].totalamount}}</view>
-            </view>
-            
-            <view class="top-three-item three" v-if="tabItem.rankList[2].username">
-              <view class="image-box">
-                <image class="image" src="/static/one.png" />
-              </view>
-              <view class="name">{{tabItem.rankList[2].username||'无名字'}}</view>
-              <view class="money">￥{{tabItem.rankList[2].totalamount}}</view>
-            </view>
-          </view>
-
-          <view class="rank-list">
-            <block v-for="(item, index) in tabItem.rankList" :key="index">
-              <view class="item" v-if="index>2">
-                <view class="heard-view">
-                  <text class="number">{{index+1}}</text>
-                  <text style="margin-left:30upx;">{{item.username||'无名字'}}</text>
+            <!-- <view class="top-three-box" v-if="tabItem.rankList.length">
+              <view class="top-three-item two" v-if="tabItem.rankList[1].username">
+                <view class="image-box">
+                  <image class="image" src="/static/one.png" />
                 </view>
-                <view>￥{{item.totalamount}}</view>
+                <view class="name">{{tabItem.rankList[1].username||'无名字'}}</view>
+                <view class="money">￥{{tabItem.rankList[1].totalamount}}</view>
               </view>
-            </block>
-          </view>
 
-					<!-- 数据列表 -->
-					<!-- <view v-for="(item, index) in tabItem.rankList" :key="index" class="order-item"></view> -->
+              <view class="top-three-item one" v-if="tabItem.rankList[0].totalamount">
+                <view class="image-box">
+                  <image class="image" src="/static/aa.png" />
+                </view>
+                <view class="name">{{tabItem.rankList[0].username||'无名字'}}</view>
+                <view class="money">￥{{tabItem.rankList[0].totalamount}}</view>
+              </view>
+              
+              <view class="top-three-item three" v-if="tabItem.rankList[2].username">
+                <view class="image-box">
+                  <image class="image" src="/static/one.png" />
+                </view>
+                <view class="name">{{tabItem.rankList[2].username||'无名字'}}</view>
+                <view class="money">￥{{tabItem.rankList[2].totalamount}}</view>
+              </view>
+            </view> -->
 
-					<!-- <uni-load-more :status="tabItem.loadingType"></uni-load-more> -->
-				</scroll-view>
-			</swiper-item>
-		</swiper>
+            <view class="rank-list">
+
+              <view class="item" v-if="tabItem.rankList[0].totalamount">
+                <view class="heard-view">
+                  <image class="image" src="/static/no1.png" />
+                  <text style="margin-left:30upx;">{{tabItem.rankList[0].username||'无名字'}}</text>
+                </view>
+                <view>￥{{tabItem.rankList[0].totalamount}}</view>
+              </view>
+
+              <view class="item" v-if="tabItem.rankList[1].totalamount">
+                <view class="heard-view">
+                  <image class="image" src="/static/no2.png" />
+                  <text style="margin-left:30upx;">{{tabItem.rankList[1].username||'无名字'}}</text>
+                </view>
+                <view>￥{{tabItem.rankList[1].totalamount}}</view>
+              </view>
+
+              <view class="item" v-if="tabItem.rankList[2].totalamount">
+                <view class="heard-view">
+                  <image class="image" src="/static/no3.png" />
+                  <text style="margin-left:30upx;">{{tabItem.rankList[2].username||'无名字'}}</text>
+                </view>
+                <view>￥{{tabItem.rankList[2].totalamount}}</view>
+              </view>
+
+              <block v-for="(item, index) in tabItem.rankList" :key="index">
+                <view class="item" v-if="index>2">
+                  <view class="heard-view">
+                    <text class="number">{{index+1}}</text>
+                    <text style="margin-left:30upx;">{{item.username||'无名字'}}</text>
+                  </view>
+                  <view>￥{{item.totalamount}}</view>
+                </view>
+              </block>
+            </view>
+
+            <!-- 数据列表 -->
+            <!-- <view v-for="(item, index) in tabItem.rankList" :key="index" class="order-item"></view> -->
+
+            <!-- <uni-load-more :status="tabItem.loadingType"></uni-load-more> -->
+          </scroll-view>
+        </swiper-item>
+      </swiper>
+    </view>
 
     <uni-calendar ref="calendar" 
 		:date="info.date" 
@@ -250,33 +280,40 @@ export default {
 }
 </script>
 <style lang="scss">
+page{
+  height: 100%;
+}
 .ranking-box{
   width: 100%;
-  padding-top: 160upx;
+  height: 100%;
+  display: flex;
+	flex-direction: column;
   .position-view{
-    position: fixed;
     width: 100%;
-    top: 0;
-    left: 0;
+  }
+  .flex-boxx{
+    flex: 1;
+    overflow: hidden;
+    width: 100%
   }
 }
 .swiper-box {
-	height: calc(100% - 40px);
+	height: calc(100%);
+}
+.empty-content{
+  padding-bottom: 0 !important;
+}
+.cart-backgound-box{
+  width: 100%;
+  height: 340upx;
+  .image{
+    width: 100%;
+    height: 100%;
+  }
 }
 .list-scroll-content {
   height: 100%;
-  .cart-backgound-box{
-    background: #F3F2DE;
-    height: 280upx;
-    display: flex;
-    // align-items: center;
-    justify-content: center;
-    .image{
-      width: 140upx;
-      height: 140upx;
-      margin-top: 40upx;
-    }
-  }
+  
   .top-three-box{
     position: relative;
     display: flex;
@@ -350,6 +387,12 @@ export default {
     align-items: center;
     .heard-view{
       flex: 1;
+      display: flex;
+      align-items: center;
+      .image{
+        width: 50upx;
+        height: 56upx;
+      }
       .number{
         display: inline-block;
         width: 50upx;
@@ -371,7 +414,7 @@ export default {
 	height: 40px;
 	padding: 0 5px;
 	background: #fff;
-	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
+	// box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
 	position: relative;
 	z-index: 10;
 	.nav-item {
@@ -391,7 +434,7 @@ export default {
 				left: 50%;
 				bottom: 0;
 				transform: translateX(-50%);
-				width: 44px;
+				width: 68px;
 				height: 0;
 				border-bottom: 2px solid $base-color;
 			}

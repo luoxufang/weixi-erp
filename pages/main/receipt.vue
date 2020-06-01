@@ -250,9 +250,10 @@ export default {
 	margin-right: 10rpx;
 	border: 1upx solid rgba(0,0,0,.2);
 	background: #fff !important;
+	line-height: 54upx !important;
 	&.active{
-		border: 1upx solid #0084FF;
-		color: #0084FF;
+		border: 1upx solid $base-color;
+		color: $base-color;
 	}
 }
 button::after{

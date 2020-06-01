@@ -186,7 +186,7 @@
 
 	.data-box{
 		image{
-			margin-left: 20upx !important;
+			margin-right: 18upx !important;
 		}
 		text{
 			font-size: 28upx;

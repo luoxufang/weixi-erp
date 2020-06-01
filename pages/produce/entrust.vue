@@ -2,7 +2,7 @@
 	<view class="table-box" style="background:#fff;">
 
 		<!-- 基本用法 -->
-    <uni-search-bar @confirm="search" @input="input" ></uni-search-bar>
+    <uni-search-bar @confirm="search" @input="input" radius="32"></uni-search-bar>
 
 		<view class="time-btn">
 			<text style="font-size:28upx;">日期范围</text>
@@ -13,11 +13,12 @@
 		</view>
 		
 		<view class="data-box" @click="open">
+			<image class="image" src="/static/tiem.png" />
 			<view class="firstTime">{{startDate}}</view>
-			<image class="image" src="/static/xiala.png" />
+			
 			<text>到</text>
+			<image class="image" src="/static/tiem.png" />
 			<view class="endTime">{{endDate}}</view>
-			<image class="image" src="/static/xiala.png" />
 		</view>
 
     <view class="table">
@@ -169,7 +170,7 @@ export default {
 					that.SaleOrderTableData = aaa
 				}else{
 					that.SaleOrderTableData = []
-					that.$api.msg('暂未无数据');
+					that.$api.msg('暂无数据');
 				}
 			} else {
 				that.$api.msg(result.erroinfo);
@@ -260,9 +261,10 @@ export default {
 	margin-right: 10rpx;
 	border: 1upx solid rgba(0,0,0,.2);
 	background: #fff !important;
+	line-height: 54upx !important;
 	&.active{
-		border: 1upx solid #0084FF;
-		color: #0084FF;
+		border: 1upx solid $base-color;
+		color: $base-color;
 	}
 }
 button::after{

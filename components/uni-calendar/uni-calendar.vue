@@ -441,6 +441,6 @@
 		border-radius: 6px;
 		height: 48px;
 		margin: 15px;
-		background-color: #007AFF;
+		background-color: #EF8200;
 	}
 </style>

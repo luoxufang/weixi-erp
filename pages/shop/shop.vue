@@ -103,7 +103,7 @@
     width: 100%;
     height: 78upx;
     line-height: 78upx;
-    background-color: #18559E;
+    background-color: $base-color;
     text-align: center;
     color: #fff;
     border-radius: 12upx;

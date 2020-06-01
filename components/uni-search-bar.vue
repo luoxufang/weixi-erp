@@ -1,6 +1,6 @@
 <template>
 	<view class="uni-searchbar">
-		<view :style="{borderRadius:radius+'px',backgroundColor: bgColor}" class="uni-searchbar__box" @click="searchClick">
+		<view :style="{borderRadius:radius+'px',backgroundColor: bgColor,borderWidth: 0}" class="uni-searchbar__box" @click="searchClick">
 			<!-- #ifdef MP-ALIPAY -->
 			<view class="uni-searchbar__box-icon-search">
 				<uni-icons color="#999999" size="18" type="search" />

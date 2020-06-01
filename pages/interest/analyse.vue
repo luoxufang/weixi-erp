@@ -2,15 +2,16 @@
 	<view class="table-box" style="background:#fff;">
 
     <!-- 基本用法 -->
-    <uni-search-bar @confirm="search" @input="input" placeholder="搜索客户"></uni-search-bar>
+    <uni-search-bar @confirm="search" @input="input" placeholder="搜索客户" radius="32"></uni-search-bar>
 		
 		<view class="data-box" @click="open">
       <text style="margin-left:0;">选择期间</text>
+      <image class="image" src="/static/time.png" />
 			<view class="firstTime">{{startDate}}</view>
-			<image class="image" src="/static/xiala.png" />
+			
 			<text>到</text>
+      <image class="image" src="/static/time.png" />
 			<view class="endTime">{{endDate}}</view>
-			<image class="image" src="/static/xiala.png" />
 		</view>
 
     <!-- <view class="selectPeople" @click.stop="toggleSpec()">
@@ -306,9 +307,10 @@ export default {
 	margin-right: 10rpx;
 	border: 1upx solid rgba(0,0,0,.2);
 	background: #fff !important;
+	line-height: 54upx !important;
 	&.active{
-		border: 1upx solid #0084FF;
-		color: #0084FF;
+		border: 1upx solid $base-color;
+		color: $base-color;
 	}
 }
 button::after{
@@ -325,8 +327,8 @@ button::after{
 		margin: 0 20upx;
 	}
 	.image{
-		width: 28upx;
-		height: 28upx;
+		width: 36upx;
+		height: 36upx;
 	}
 }
 .selectPeople{

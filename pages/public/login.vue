@@ -1,23 +1,34 @@
 <template>
 	<view class="container">
-		<view class="left-bottom-sign"></view>
+		<!-- <view class="left-bottom-sign"></view> -->
 		<view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view>
-		<view class="right-top-sign"></view>
+		<!-- <view class="right-top-sign"></view> -->
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
+		<view class="logo-view">
+			<image class="logo" src="/static/logo.png" mode="aspectFill" />
+		</view>
 		<view class="wrapper">
-			<view class="left-top-sign">LOGIN</view>
-			<view class="welcome">欢迎回来！</view>
+			<!-- <view class="left-top-sign">LOGIN</view>
+			<view class="welcome">欢迎回来！</view> -->
 			<view class="input-content">
 				<view class="input-item">
-					<text class="tit">云账号</text>
+					<!-- <text class="tit">云账号</text> -->
+					<view class="input-img">
+						<image class="image" src="/static/logo_yun.png" mode="aspectFill" />
+					</view>
 					<input v-model="cloudusername" placeholder="请输入云账号" placeholder-class="input-empty" />
 				</view>
 					<view class="input-item">
-					<text class="tit">用户名</text>
+					<!-- <text class="tit">用户名</text> -->
+					<view class="input-img">
+						<image class="image" src="/static/logo_user.png" mode="aspectFill" />
+					</view>
 					<input v-model="username" placeholder="请输入用户名" placeholder-class="input-empty" />
 				</view>
 				<view class="input-item">
-					<text class="tit">密码</text>
+					<view class="input-img">
+						<image class="image" src="/static/logo_password.png" mode="aspectFill" />
+					</view>
 					<input
 						type="mobile"
 						v-model="password"
@@ -178,6 +189,17 @@ page {
 		font-size: 26upx;
 		color: #999;
 	}
+	.logo-view{
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 200upx;
+		image{
+			width: 408upx;
+			height: 90upx;
+		}
+	}
 }
 .wrapper {
 	position: relative;
@@ -249,10 +271,11 @@ page {
 	display: flex;
 	align-items: flex-start;
 	justify-content: center;
-	padding: 0 30upx;
-	background: $page-color-light;
+	// padding: 0 30upx;
+	// background: $page-color-light;
 	height: 90upx;
-	border-radius: 4px;
+	// border-radius: 4px;
+	border-bottom: 2upx solid #EEEEEE;
 	margin-bottom: 28upx;
 	&:last-child {
 		margin-bottom: 0;
@@ -262,6 +285,18 @@ page {
 		line-height: 90upx;
 		font-size: $font-sm + 2upx;
 		color: $font-color-base;
+	}
+	.input-img{
+		// width: 80upx;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-right: 30upx;
+		image{
+			width: 60upx;
+			height: 60upx;
+		}
 	}
 	input {
 		height: 90upx;
@@ -276,14 +311,17 @@ page {
 	width: 630upx;
 	height: 76upx;
 	line-height: 76upx;
-	border-radius: 50px;
 	margin-top: 70upx;
-	background: #1775E6;
+	background: $base-color;
 	color: #fff;
 	font-size: $font-lg;
+	border-radius:8upx;
 	&:after {
 		border-radius: 100px;
 	}
+}
+button::after{
+	border: 0;
 }
 .forget-section {
 	font-size: $font-sm + 2upx;

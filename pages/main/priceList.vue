@@ -284,8 +284,8 @@ export default {
 	border: 1upx solid rgba(0,0,0,.2);
 	background: #fff !important;
 	&.active{
-		border: 1upx solid #0084FF;
-		color: #0084FF;
+		border: 1upx solid $base-color;
+		color: $base-color;
 	}
 }
 button::after{
@@ -416,19 +416,19 @@ button::after{
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border: 1upx solid #0084FF;
+		border: 1upx solid $base-color;
 		font-size: 28upx;
 		&.right{
 			background: #fff;
-			color: #0084FF;
+			color: $base-color;
 			&.active{
-				background: #0084FF;
+				background: $base-color;
 				color: #fff;
 			}
 		}
 		&.left{
 			&.active{
-				background: #0084FF;
+				background: $base-color;
 				color: #fff;
 			}
 		}

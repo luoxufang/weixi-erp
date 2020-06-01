@@ -2,7 +2,7 @@
 	<view class="table-box" style="background:#fff;">
 
     <!-- 基本用法 -->
-    <uni-search-bar @confirm="search" @input="input" placeholder="搜索客户"></uni-search-bar>
+    <uni-search-bar @confirm="search" @input="input" radius="32" placeholder="搜索客户"></uni-search-bar>
 
     <!-- <view class="selectPeople" @click.stop="toggleSelect()">
       <view class="title">选择客户</view>
@@ -28,20 +28,20 @@
 
       <view class="item-view left">
         <text style="margin-left:0;">选择期间</text>
+        <image class="image" src="/static/tiem.png" />
         <view class="aaaa">
           <view class="firstTime" @click="open">{{startDate}}</view>
           <view class="firstTime" @click="open">{{endDate}}</view>
         </view>
-        <image class="image" src="/static/xiala.png" />
       </view>
 
       <view class="item-view right">
         <text style="margin-left:0;">对比期间</text>
+        <image class="image" src="/static/tiem.png" />
         <view class="aaaa">
           <view class="endTime" @click="open2">{{startDate2}}</view>
           <view class="endTime" @click="open2">{{endDate2}}</view>
         </view>
-        <image class="image" src="/static/xiala.png" />
       </view>
       
 		</view>
@@ -197,11 +197,28 @@ export default {
 		}else{
       var date = day2.getDate()
     }
-		var today = day2.getFullYear()+"-" + Month + "-" + date;
-		this.startDate = today
-		this.endDate = today
-		this.startDate2 = today
-    this.endDate2 = today
+    var today = day2.getFullYear()+"-" + Month + "-" + date;
+    
+    // 初始为本月的第一天
+    var firstTime = day2.getFullYear()+"-" + Month + "-01";
+		this.startDate = firstTime
+    this.endDate = today
+    
+    var nowdays = new Date(); 
+    var year = nowdays.getFullYear();
+    var month = nowdays.getMonth();
+    if(month==0){
+      month = 12;
+      year = year-1;
+    }
+    if(month<10){  month = '0'+month; }
+    var myDate = new Date(year,month,0);
+
+    var startDate2 = year+'-'+month+'-01'; //上个月第一天
+    var endDate2 = year+'-'+month+'-'+myDate.getDate();//上个月最后一天
+    
+		this.startDate2 = startDate2
+    this.endDate2 = endDate2
     // -----------------------------
 		this.tableType = options.type
     
@@ -330,9 +347,10 @@ export default {
 	margin-right: 10rpx;
 	border: 1upx solid rgba(0,0,0,.2);
 	background: #fff !important;
+	line-height: 54upx !important;
 	&.active{
-		border: 1upx solid #0084FF;
-		color: #0084FF;
+		border: 1upx solid $base-color;
+		color: $base-color;
 	}
 }
 button::after{
@@ -357,7 +375,9 @@ button::after{
 	}
 	.image{
 		width: 28upx;
-		height: 28upx;
+    height: 28upx;
+    position: relative;
+    top: 6upx;
 	}
 }
 .selectPeople{

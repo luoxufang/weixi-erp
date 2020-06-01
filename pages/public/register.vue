@@ -1,25 +1,35 @@
 <template>
 	<view class="container">
-		<view class="left-bottom-sign"></view>
+		<!-- <view class="left-bottom-sign"></view> -->
 		<view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view>
-		<view class="right-top-sign"></view>
+		<!-- <view class="right-top-sign"></view> -->
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
 		<view class="wrapper">
-			<view class="left-top-sign"></view>
+			<!-- <view class="left-top-sign"></view> -->
 			<view class="input-content">
 				<view class="input-item">
-					<text class="tit">云账号</text>
-					<input type="number" :value="email" placeholder="请输入云账号" data-key="email" @input="inputChange" placeholder-class="input-empty" />
+					<!-- <text class="tit">云账号</text> -->
+					<view class="input-img">
+						<image class="image" src="/static/logo_yun.png" mode="aspectFill" />
+					</view>
+					<input type="number" :value="username1" placeholder="请输入云账号" data-key="email" @input="inputChange" placeholder-class="input-empty" />
 				</view>
 				<view class="input-item">
-					<text class="tit">密码</text>
-					<input type="number" :value="mobile" placeholder="密码" maxlength="11" data-key="mobile" @input="inputChange" placeholder-class="input-empty" />
+					<!-- <text class="tit">密码</text> -->
+					<view class="input-img">
+						<image class="image" src="/static/logo_password.png" mode="aspectFill" />
+					</view>
+					<input type="number" :value="password1" placeholder="密码" maxlength="11" data-key="mobile" @input="inputChange" placeholder-class="input-empty" />
 				</view>
 				<view class="input-item">
-					<text class="tit">确认密码</text>
+					<!-- <text class="tit">确认密码</text> -->
+					<view class="input-img">
+						<image class="image" src="/static/logo_password.png" mode="aspectFill" />
+					</view>
 					<input
 						type="mobile"
 						value=""
+						v-model="password2"
 						placeholder="请输入确认密码"
 						placeholder-class="input-empty"
 						maxlength="20"
@@ -31,16 +41,25 @@
 				</view>
 
 				<view class="input-item">
-					<text class="tit">总店名称</text>
-					<input type="number" :value="mobile" placeholder="总店名称" maxlength="11" data-key="mobile" @input="inputChange" placeholder-class="input-empty" />
+					<!-- <text class="tit">总店名称</text> -->
+					<view class="input-img">
+						<image class="image" src="/static/logo_shop.png" mode="aspectFill" />
+					</view>
+					<input type="number" :value="shopname" placeholder="总店名称" maxlength="11" data-key="mobile" @input="inputChange" placeholder-class="input-empty" />
 				</view>
 				<view class="input-item">
-					<text class="tit">手机号码</text>
-					<input type="number" :value="mobile" placeholder="手机号" maxlength="11" data-key="mobile" @input="inputChange" placeholder-class="input-empty" />
+					<!-- <text class="tit">手机号码</text> -->
+					<view class="input-img">
+						<image class="image" src="/static/logo_phone.png" mode="aspectFill" />
+					</view>
+					<input type="number" v-model="phoneNumber" placeholder="手机号" maxlength="11" data-key="mobile" @input="inputChange" placeholder-class="input-empty" />
 				</view>
 				<view class="input-item">
-					<text class="tit">验证码</text>
-					<input type="number" :value="mobile" placeholder="验证码" maxlength="11" data-key="mobile" @input="inputChange" placeholder-class="input-empty" />
+					<!-- <text class="tit">验证码</text> -->
+					<view class="input-img">
+						<image class="image" src="/static/logo_code.png" mode="aspectFill" />
+					</view>
+					<input type="number" :value="phoneCode" placeholder="验证码" maxlength="11" data-key="mobile" @input="inputChange" placeholder-class="input-empty" />
 					<view class="codeBox" :class="changeColor?'changeColor':''" @click="getValidCode">
 						<view class="childBox">{{count!=60? '重新获取('+count+'s)':'获取验证码'}}</view>
 					</view>
@@ -63,13 +82,19 @@ import { mapMutations } from 'vuex';
 export default {
 	data() {
 		return {
+			username1:'',
+			password1:'',
+			password2:'',
 			mobile: '',
 			email: '',
 			password: '123456',
+			phoneNumber: '',
+			phoneCode: '',
+			shopname:'',
+
 			logining: false,
 			changeColor: false,
 			count: 60,
-			phoneNumber: ''
 		};
 	},
 	onLoad() {},
@@ -230,17 +255,18 @@ page {
 	text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.3);
 }
 .input-content {
-	padding: 160upx 60upx 0;
+	padding: 120upx 60upx 0;
 }
 .input-item {
 	display: flex;
 	align-items: flex-start;
 	justify-content: center;
-	padding: 0 30upx;
-	background: $page-color-light;
+	// padding: 0 30upx;
+	// background: $page-color-light;
 	height: 90upx;
-	border-radius: 4px;
+	// border-radius: 4px;
 	margin-bottom: 28upx;
+	border-bottom: 2upx solid #EEEEEE;
 	&:last-child {
 		margin-bottom: 0;
 	}
@@ -249,6 +275,18 @@ page {
 		line-height: 90upx;
 		font-size: $font-sm + 4upx;
 		color: $font-color-base;
+	}
+	.input-img{
+		// width: 80upx;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-right: 30upx;
+		image{
+			width: 60upx;
+			height: 60upx;
+		}
 	}
 	input {
 		height: 90upx;
@@ -261,7 +299,7 @@ page {
 		display: flex;
 		align-items:center;
 		height: 90upx;
-		color: #666;
+		color: $base-color;
 		font-size: 28upx;
 		.childBox{
 			width: 210upx;
@@ -279,14 +317,18 @@ page {
 	width: 630upx;
 	height: 76upx;
 	line-height: 76upx;
-	border-radius: 50px;
+	// border-radius: 50px;
 	margin-top: 70upx;
-	background: #1775E6;
+	background: $base-color;
 	color: #fff;
 	font-size: $font-lg;
+	border-radius: 8upx;
 	&:after {
 		border-radius: 100px;
 	}
+}
+button::after{
+	border: 0;
 }
 .forget-section {
 	font-size: $font-sm + 2upx;
